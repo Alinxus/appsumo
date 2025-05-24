@@ -3,7 +3,17 @@ import { db } from '@/db'
 import { UserRole } from '@prisma/client'
 import { redirect } from 'next/navigation'
 
+// Check if we're in build context
+function isBuildTime() {
+  return typeof window === 'undefined' && process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL
+}
+
 export async function getCurrentUser() {
+  // Skip auth during build time
+  if (isBuildTime()) {
+    return null
+  }
+
   const supabase = createClient()
   
   try {
@@ -28,6 +38,11 @@ export async function getCurrentUser() {
 }
 
 export async function requireAuth() {
+  // Skip auth during build time
+  if (isBuildTime()) {
+    throw new Error('Auth not available during build')
+  }
+
   const user = await getCurrentUser()
   
   if (!user) {
@@ -68,11 +83,21 @@ export async function requireVendor() {
 }
 
 export async function isAdmin() {
+  // Skip auth during build time
+  if (isBuildTime()) {
+    return false
+  }
+
   const user = await getCurrentUser()
   return user?.profile?.role === 'ADMIN'
 }
 
 export async function isVendor() {
+  // Skip auth during build time
+  if (isBuildTime()) {
+    return false
+  }
+
   const user = await getCurrentUser()
   return user?.profile?.role === 'VENDOR' || user?.profile?.role === 'ADMIN'
 }

@@ -1,29 +1,22 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import type React from "react"; // Import React
 import { cn } from "@/lib/utils";
 
-const bricolageGrotesque = Bricolage_Grotesque({
-  subsets: ["latin"],
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  title: "ShipFree",
+  title: "AIsumo - AI Tools Marketplace",
   description:
-    "Open Source Alternative to ShipFast - Launch your startup in days Not in weeks",
+    "Discover the best AI tools at unbeatable prices. Lifetime access to premium software with no monthly fees.",
   keywords: [
-    "saas",
-    "boilerplate",
-    "open source",
-    "free",
-    "open source shipfast",
-    "shipfree",
-    "idee8",
-    "made by idee8",
-    "free boilerplate",
-    "github",
+    "ai tools",
+    "marketplace",
+    "lifetime deals",
+    "appsumo",
+    "artificial intelligence",
+    "software deals",
+    "ai marketplace",
+    "lifetime access",
+    "premium software",
   ],
 };
 
@@ -34,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(bricolageGrotesque.className, "antialiased")}>
+      <body className={cn("font-sans", "antialiased")}>
         {children}
       </body>
     </html>

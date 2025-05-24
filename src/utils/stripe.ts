@@ -9,4 +9,7 @@ export const getStripe = () => {
   return stripePromise;
 };
 
-export const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+// Only initialize Stripe if the secret key is available
+export const stripe = process.env.STRIPE_SECRET_KEY 
+  ? require("stripe")(process.env.STRIPE_SECRET_KEY)
+  : null;

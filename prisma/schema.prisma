@@ -34,6 +34,13 @@ enum ToolStatus {
   REJECTED
 }
 
+enum FulfillmentMethod {
+  BULK_KEYS
+  COUPON_CODE
+  API_PROVISION
+  MANUAL_FULFILLMENT
+}
+
 model Profile {
   id          String   @id @default(cuid())
   email       String   @unique
@@ -93,6 +100,22 @@ model AiTool {
   accessInstructions  String?
   licenseType         String?
   refundPolicy        String?
+  
+  // AppSumo-style fulfillment
+  fulfillmentMethod   FulfillmentMethod @default(MANUAL_FULFILLMENT)
+  couponCode          String?
+  apiWebhookUrl       String?
+  redemptionUrl       String?
+  fulfillmentInstructions String?
+  
+  // Commission & Revenue
+  platformCommission Decimal    @db.Decimal(5, 2) @default(70.00) // AppSumo's cut (70%)
+  vendorRevenue      Decimal    @db.Decimal(5, 2) @default(30.00) // Vendor's cut (30%)
+  
+  // License Management
+  totalLicenses      Int?       // Total licenses available
+  usedLicenses       Int        @default(0)
+  
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt
 
@@ -101,6 +124,7 @@ model AiTool {
   reviews   Review[]
   purchases Purchase[]
   wishlists Wishlist[]
+  licenseKeys LicenseKey[]
 
   @@map("ai_tools")
 }
@@ -239,4 +263,18 @@ model Analytics {
 
   @@unique([date])
   @@map("analytics")
+}
+
+model LicenseKey {
+  id          String   @id @default(cuid())
+  toolId      String
+  keyValue    String   @unique
+  isUsed      Boolean  @default(false)
+  usedBy      String?  // User ID who redeemed it
+  usedAt      DateTime?
+  createdAt   DateTime @default(now())
+
+  tool        AiTool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@map("license_keys")
 }

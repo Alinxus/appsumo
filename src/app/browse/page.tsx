@@ -62,7 +62,24 @@ export default async function BrowsePage({
     })
   }
 
-    const [tools, totalCount, categories] = await Promise.all([    db.aiTool.findMany({      where: whereClause,      include: {        category: true,        _count: { select: { reviews: true, purchases: true } }      },      orderBy,      take: itemsPerPage    }),    db.aiTool.count({ where: whereClause }),    db.category.findMany({      where: { isActive: true },      orderBy: { sortOrder: 'asc' }    })  ])  const hasMore = tools.length === itemsPerPage && totalCount > itemsPerPage
+  const [tools, totalCount, categories] = await Promise.all([
+    db.aiTool.findMany({
+      where: whereClause,
+      include: {
+        category: true,
+        _count: { select: { reviews: true, purchases: true } }
+      },
+      orderBy,
+      take: itemsPerPage
+    }),
+    db.aiTool.count({ where: whereClause }),
+    db.category.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: 'asc' }
+    })
+  ])
+  
+  const hasMore = tools.length === itemsPerPage && totalCount > itemsPerPage
 
   const featuredTools = await db.aiTool.findMany({
     where: {
@@ -134,7 +151,16 @@ export default async function BrowsePage({
             />
           </aside>
           
-                    <main className="flex-1">            <BrowseGrid               tools={tools}              hasMore={hasMore}              totalCount={totalCount}              searchQuery={searchQuery}              categoryFilter={categoryFilter}              sortBy={sortBy}            />          </main>
+          <main className="flex-1">
+            <BrowseGrid 
+              tools={tools}
+              hasMore={hasMore}
+              totalCount={totalCount}
+              searchQuery={searchQuery}
+              categoryFilter={categoryFilter}
+              sortBy={sortBy}
+            />
+          </main>
         </div>
       </div>
       

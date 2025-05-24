@@ -4,7 +4,15 @@ import { db } from '@/db'
 
 export async function PUT(request: NextRequest) {
   try {
-    await requireAdmin()
+    // Check auth only if we're in a request context
+    try {
+      await requireAdmin()
+    } catch (authError) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
     
     const data = await request.json()
     
