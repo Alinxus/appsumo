@@ -2,7 +2,7 @@
 
 Hi there! 👋
 
-ShipFree is a free alternative to ShipFast, designed to simplify and optimize your shipping process. It’s built using modern web technologies like Next.js, Supabase, Stripe, LemonSqueezy, Drizzle ORM and Mailgun.
+ShipFree is a free alternative to ShipFast, designed to simplify and optimize your shipping process. It's built using modern web technologies like Next.js, Supabase, Stripe, LemonSqueezy, Prisma and Mailgun.
 
 ## Features
 
@@ -60,7 +60,7 @@ In development, the project runs in **watch mode**, meaning it automatically det
 #### Why Watch Mode?
 
 - **Watch mode** ensures that your changes are reflected in real-time without manually restarting the server.
-- It’s perfect for development but **not suitable for production** due to performance and security concerns.
+- It's perfect for development but **not suitable for production** due to performance and security concerns.
 
 ---
 
