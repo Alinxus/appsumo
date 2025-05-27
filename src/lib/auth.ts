@@ -1,4 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth-options'
 import { db } from '@/db'
 import { UserRole } from '@prisma/client'
 import { redirect } from 'next/navigation'
@@ -14,22 +15,20 @@ export async function getCurrentUser() {
     return null
   }
 
-  const supabase = createClient()
-  
   try {
-    const { data: { user }, error } = await supabase.auth.getUser()
+    const session = await getServerSession(authOptions)
     
-    if (error || !user) {
+    if (!session?.user?.email) {
       return null
     }
 
     const profile = await db.profile.findUnique({
-      where: { email: user.email! }
+      where: { email: session.user.email }
     })
 
     return {
-      id: user.id,
-      email: user.email!,
+      id: session.user.id || '',
+      email: session.user.email,
       profile
     }
   } catch (error) {

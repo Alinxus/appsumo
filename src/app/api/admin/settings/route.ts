@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAdmin } from '@/lib/auth'
 import { db } from '@/db'
 
 export async function PUT(request: NextRequest) {
   try {
-    // Check auth only if we're in a request context
+    // Skip during build time
+    if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL) {
+      return NextResponse.json(
+        { error: 'API not available during build' },
+        { status: 503 }
+      )
+    }
+
+    // Import auth only when needed to avoid build-time issues
+    const { requireAdmin } = await import('@/lib/auth')
+    
     try {
       await requireAdmin()
     } catch (authError) {

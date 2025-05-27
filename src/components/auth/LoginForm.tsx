@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { signIn, getSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { createProfile } from '@/lib/auth'
 
 export function LoginForm() {
   const [email, setEmail] = useState('')
@@ -11,7 +10,6 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
-  const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -19,23 +17,25 @@ export function LoginForm() {
     setError('')
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const result = await signIn('credentials', {
         email,
         password,
+        redirect: false,
       })
 
-      if (error) {
-        setError(error.message)
+      if (result?.error) {
+        setError('Invalid email or password')
         return
       }
 
-      if (data.user) {
+      const session = await getSession()
+      if (session?.user?.email) {
         const response = await fetch('/api/auth/profile', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            email: data.user.email,
-            fullName: data.user.user_metadata?.full_name || ''
+            email: session.user.email,
+            fullName: session.user.name || ''
           })
         })
 
@@ -63,15 +63,12 @@ export function LoginForm() {
     setError('')
 
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`
-        }
+      const result = await signIn('google', {
+        callbackUrl: '/dashboard'
       })
 
-      if (error) {
-        setError(error.message)
+      if (result?.error) {
+        setError('Failed to sign in with Google')
       }
     } catch (err: any) {
       setError('An unexpected error occurred')

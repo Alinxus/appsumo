@@ -1,7 +1,14 @@
+import { requireAdmin } from '@/lib/auth'
 import { db } from '@/db'
+import { AdminHeader } from '@/components/admin/AdminHeader'
+import { AdminStats } from '@/components/admin/AdminStats'
+import { AdminQuickActions } from '@/components/admin/AdminQuickActions'
+import { AdminRecentActivity } from '@/components/admin/AdminRecentActivity'
 import { AdminStatsCards } from '@/components/admin/AdminStatsCards'
 import { RecentActivity } from '@/components/admin/RecentActivity'
 import { QuickActions } from '@/components/admin/QuickActions'
+
+export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
   const [

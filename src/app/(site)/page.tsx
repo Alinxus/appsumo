@@ -6,7 +6,119 @@ import { CategoriesSection } from '@/components/site/CategoriesSection'
 import { Navigation } from '@/components/site/Navigation'
 import { Footer } from '@/components/site/Footer'
 
-export default async function HomePage() {  const settings = await db.adminSettings.findFirst()    const categories = await db.category.findMany({    where: { isActive: true },    orderBy: { sortOrder: 'asc' }  })  const featuredTool = await db.aiTool.findFirst({    where: {       status: 'ACTIVE',      isFeatured: true,      dealEndsAt: { gt: new Date() }    },    include: {      category: true,      vendor: { select: { fullName: true, email: true } },      _count: { select: { reviews: true } }    }  })  const activeTools = await db.aiTool.findMany({    where: {       status: 'ACTIVE'    },    include: {      category: true,      vendor: { select: { fullName: true, email: true } },      _count: { select: { reviews: true } }    },    orderBy: [      { isFeatured: 'desc' },      { createdAt: 'desc' }    ],    take: 12  })  const stats = await Promise.all([    db.aiTool.count({ where: { status: 'ACTIVE' } }),    db.profile.count({ where: { role: 'USER' } }),    db.purchase.count({ where: { status: 'COMPLETED' } }),    db.purchase.aggregate({       where: { status: 'COMPLETED' },      _sum: { pricePaid: true }    })  ])  const marketplaceStats = {    totalTools: stats[0],    totalUsers: stats[1],     totalSales: stats[2],    totalSavings: stats[3]._sum.pricePaid ? Number(stats[3]._sum.pricePaid) * 2 : 0  }
+export const dynamic = 'force-dynamic'
 
-    return (    <div className="min-h-screen bg-white">      <Navigation />            <HeroSection         title={settings?.heroTitle || 'Discover AI Tools. Stay Innovative.'}        subtitle={settings?.heroSubtitle || 'Top AI software deals for entrepreneurs at incredible prices. Lifetime access to premium tools with no monthly fees.'}        stats={marketplaceStats}      />      {featuredTool && (        <FeaturedDeal tool={featuredTool} />      )}      <CategoriesSection categories={categories} />      <DealsGrid tools={activeTools} />      <div className="bg-gray-50 py-16">        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">          <h2 className="text-3xl font-bold text-gray-900 mb-4">            Join thousands of entrepreneurs          </h2>          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">            Don't miss out on exclusive AI tool deals. Get lifetime access to premium software at unbeatable prices.          </p>          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">            <div>              <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalTools}+</div>              <div className="text-gray-600">AI Tools</div>            </div>            <div>              <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalUsers.toLocaleString()}+</div>              <div className="text-gray-600">Happy Customers</div>            </div>            <div>              <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalSales.toLocaleString()}+</div>              <div className="text-gray-600">Tools Sold</div>            </div>            <div>              <div className="text-4xl font-bold text-green-600">${marketplaceStats.totalSavings.toLocaleString()}+</div>              <div className="text-gray-600">Total Savings</div>            </div>          </div>          <a            href="/browse"            className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center"          >            Browse All Deals            <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />            </svg>          </a>        </div>      </div>      <Footer />    </div>  )
+export default async function HomePage() {
+  const settings = await db.adminSettings.findFirst()
+  
+  const categories = await db.category.findMany({
+    where: { isActive: true },
+    orderBy: { sortOrder: 'asc' }
+  })
+  
+  const featuredTool = await db.aiTool.findFirst({
+    where: {
+      status: 'ACTIVE',
+      isFeatured: true,
+      dealEndsAt: { gt: new Date() }
+    },
+    include: {
+      category: true,
+      vendor: { select: { fullName: true, email: true } },
+      _count: { select: { reviews: true } }
+    }
+  })
+  
+  const activeTools = await db.aiTool.findMany({
+    where: {
+      status: 'ACTIVE'
+    },
+    include: {
+      category: true,
+      vendor: { select: { fullName: true, email: true } },
+      _count: { select: { reviews: true } }
+    },
+    orderBy: [
+      { isFeatured: 'desc' },
+      { createdAt: 'desc' }
+    ],
+    take: 12
+  })
+  
+  const stats = await Promise.all([
+    db.aiTool.count({ where: { status: 'ACTIVE' } }),
+    db.profile.count({ where: { role: 'USER' } }),
+    db.purchase.count({ where: { status: 'COMPLETED' } }),
+    db.purchase.aggregate({
+      where: { status: 'COMPLETED' },
+      _sum: { pricePaid: true }
+    })
+  ])
+  
+  const marketplaceStats = {
+    totalTools: stats[0],
+    totalUsers: stats[1],
+    totalSales: stats[2],
+    totalSavings: stats[3]._sum.pricePaid ? Number(stats[3]._sum.pricePaid) * 2 : 0
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      <Navigation />
+      
+      <HeroSection 
+        title={settings?.heroTitle || 'Discover AI Tools. Stay Innovative.'}
+        subtitle={settings?.heroSubtitle || 'Top AI software deals for entrepreneurs at incredible prices. Lifetime access to premium tools with no monthly fees.'}
+        stats={marketplaceStats}
+      />
+      
+      {featuredTool && (
+        <FeaturedDeal tool={featuredTool} />
+      )}
+      
+      <CategoriesSection categories={categories} />
+      
+      <DealsGrid tools={activeTools} />
+      
+      <div className="bg-gray-50 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Join thousands of entrepreneurs
+          </h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Don't miss out on exclusive AI tool deals. Get lifetime access to premium software at unbeatable prices.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            <div>
+              <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalTools}+</div>
+              <div className="text-gray-600">AI Tools</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalUsers.toLocaleString()}+</div>
+              <div className="text-gray-600">Happy Customers</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalSales.toLocaleString()}+</div>
+              <div className="text-gray-600">Tools Sold</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-green-600">${marketplaceStats.totalSavings.toLocaleString()}+</div>
+              <div className="text-gray-600">Total Savings</div>
+            </div>
+          </div>
+          <a
+            href="/browse"
+            className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center"
+          >
+            Browse All Deals
+            <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+        </div>
+      </div>
+      
+      <Footer />
+    </div>
+  )
 } 

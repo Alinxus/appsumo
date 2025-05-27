@@ -1,5 +1,8 @@
 import { db } from '@/db'
 import Link from 'next/link'
+import { AdminToolsList } from '@/components/admin/AdminToolsList'
+
+export const dynamic = 'force-dynamic'
 
 export default async function AdminToolsPage() {
   const tools = await db.aiTool.findMany({

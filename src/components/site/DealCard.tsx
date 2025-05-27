@@ -5,24 +5,25 @@ import { useState, useEffect } from 'react'
 
 interface DealCardProps {
   tool: {
-    id: string
-    name: string
-    slug: string
-    shortDescription: string | null
-    regularPrice: any
-    dealPrice: any | null
-    discountPercentage: number | null
-    dealEndsAt: Date | null
-    images: string[]
-    features: string[]
-    isFeatured: boolean
-    category: { name: string }
-    _count: { reviews: number }
-  }
+    id: string;
+    name: string;
+    slug: string;
+    shortDescription: string | null;
+    regularPrice: any;
+    dealPrice: any | null;
+    discountPercentage: number | null;
+    dealEndsAt: Date | null;
+    images: string[];
+    category: { name: string };
+    vendor: { fullName: string | null; email: string };
+    _count: { reviews: number };
+  };
 }
 
 export function DealCard({ tool }: DealCardProps) {
   const [timeLeft, setTimeLeft] = useState('')
+  // For demo purposes - mock rating between 4-5
+  const avgRating = 4 + Math.random()
 
   useEffect(() => {
     if (!tool.dealEndsAt) return
@@ -36,15 +37,14 @@ export function DealCard({ tool }: DealCardProps) {
         const days = Math.floor(distance / (1000 * 60 * 60 * 24))
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000)
-
+        
         if (days > 0) {
-          setTimeLeft(`${days}d ${hours}h ${minutes}m`)
+          setTimeLeft(`${days}d ${hours}h`)
         } else {
-          setTimeLeft(`${hours}h ${minutes}m ${seconds}s`)
+          setTimeLeft(`${hours}h ${minutes}m`)
         }
       } else {
-        setTimeLeft('Deal expired')
+        setTimeLeft('Expired')
       }
     }, 1000)
 
@@ -53,118 +53,72 @@ export function DealCard({ tool }: DealCardProps) {
 
   const currentPrice = tool.dealPrice || tool.regularPrice
   const hasDiscount = !!tool.dealPrice && tool.dealPrice < tool.regularPrice
-
+  
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <div className="relative p-6 pb-4">
-        <div className="flex justify-between items-start mb-4">
-          <div className="flex-shrink-0">
-            {tool.images[0] ? (
-              <img 
-                src={tool.images[0]} 
-                alt={tool.name} 
-                className="w-16 h-16 object-contain rounded-lg border border-gray-100"
-              />
-            ) : (
-              <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">🛠️</span>
-              </div>
-            )}
+    <div className="bg-white border border-gray-200 hover:shadow-sm transition-all">
+      <div className="relative">
+        <Link href={`/tools/${tool.slug}`}>
+          {tool.images[0] ? (
+            <img 
+              src={tool.images[0]} 
+              alt={tool.name} 
+              className="w-full aspect-video object-cover" 
+            />
+          ) : (
+            <div className="w-full aspect-video bg-gray-100 flex items-center justify-center">
+              <span className="text-4xl">🛠️</span>
+            </div>
+          )}
+        </Link>
+        
+        {hasDiscount && (
+          <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+            {tool.discountPercentage}% OFF
           </div>
-          
-          <div className="flex flex-col items-end gap-2">
-            {tool.isFeatured && (
-              <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">
-                🔥 Featured
-              </span>
-            )}
-            {hasDiscount && (
-              <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide animate-pulse">
-                Limited Deal
-              </span>
-            )}
-          </div>
+        )}
+        
+        <div className="absolute top-2 left-2">
+          <span className="bg-gray-800 text-white text-xs px-2 py-1 rounded capitalize">
+            {tool.category?.name || 'AI Tool'}
+          </span>
         </div>
       </div>
-
-      <div className="px-6 pb-4">
-        <h3 className="text-xl font-bold text-gray-900 mb-2">{tool.name}</h3>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2 min-h-[2.5rem]">
-          {tool.shortDescription || 'Powerful AI tool to boost your productivity'}
+      
+      <div className="p-4">
+        <h3 className="text-base font-medium text-gray-900 mb-1 line-clamp-1">{tool.name}</h3>
+        <p className="text-xs text-gray-500 mb-3 line-clamp-2">
+          {tool.shortDescription || 'Powerful AI tool with premium features and lifetime access.'}
         </p>
-
-        <div className="flex items-center gap-3 mb-4">
+        
+        <div className="flex items-center mb-3">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <svg 
+              key={star} 
+              className={`w-3 h-3 ${star <= Math.floor(avgRating) ? 'text-yellow-400' : 'text-gray-300'}`} 
+              fill="currentColor" 
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          ))}
+          <span className="text-xs text-gray-500 ml-1">({tool._count?.reviews || 0})</span>
+        </div>
+        
+        <div className="flex items-baseline mb-3">
+          <span className="text-lg font-bold">${Number(currentPrice).toFixed(0)}</span>
           {hasDiscount && (
-            <span className="text-gray-400 line-through text-lg">
+            <span className="ml-2 text-xs text-gray-500 line-through">
               ${Number(tool.regularPrice).toFixed(0)}
             </span>
           )}
-          <span className="text-3xl font-bold text-gray-900">
-            ${Number(currentPrice).toFixed(0)}
-          </span>
-          {hasDiscount && (
-            <span className="bg-green-100 text-green-800 text-sm font-semibold px-2 py-1 rounded">
-              {tool.discountPercentage}% OFF
-            </span>
-          )}
         </div>
-
-        <ul className="text-sm text-gray-600 space-y-1 mb-6">
-          {tool.features.slice(0, 3).map((feature, index) => (
-            <li key={index} className="flex items-center">
-              <svg className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              {feature}
-            </li>
-          ))}
-          {tool.features.length === 0 && (
-            <>
-              <li className="flex items-center">
-                <svg className="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                Lifetime access to all features
-              </li>
-              <li className="flex items-center">
-                <svg className="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                Commercial license included
-              </li>
-              <li className="flex items-center">
-                <svg className="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                60-day money-back guarantee
-              </li>
-            </>
-          )}
-        </ul>
-
-        <div className="space-y-3">
-          <Link href={`/tools/${tool.slug}`}>
-            <button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-200">
-              Get Lifetime Deal
-            </button>
-          </Link>
-          
-          {tool.dealEndsAt && (
-            <div className="text-center">
-              <div className="text-sm text-gray-500 mb-1">Deal ends in:</div>
-              <div className={`text-lg font-mono font-bold ${timeLeft.includes('expired') ? 'text-red-600' : 'text-red-600'}`}>
-                {timeLeft}
-              </div>
-            </div>
-          )}
-          
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-              {tool.category.name}
-            </span>
-            <span>{tool._count.reviews} reviews</span>
-          </div>
-        </div>
+        
+        <Link 
+          href={`/tools/${tool.slug}`}
+          className="block w-full bg-[#00b289] hover:bg-[#00a07a] text-white text-center py-2 text-sm font-medium rounded transition-colors"
+        >
+          View Deal
+        </Link>
       </div>
     </div>
   )

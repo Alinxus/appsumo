@@ -9,6 +9,8 @@ import { Navigation } from '@/components/site/Navigation'
 import { Footer } from '@/components/site/Footer'
 import { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: {
     slug: string

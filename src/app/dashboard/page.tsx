@@ -5,6 +5,12 @@ import { Footer } from '@/components/site/Footer'
 import { UserDashboardStats } from '@/components/dashboard/UserDashboardStats'
 import { UserPurchases } from '@/components/dashboard/UserPurchases'
 import { UserWishlist } from '@/components/dashboard/UserWishlist'
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
+import { PurchaseHistory } from '@/components/dashboard/PurchaseHistory'
+import { WishlistSection } from '@/components/dashboard/WishlistSection'
+import { DashboardStats } from '@/components/dashboard/DashboardStats'
+
+export const dynamic = 'force-dynamic'
 
 export default async function UserDashboard() {
   const user = await requireAuth()

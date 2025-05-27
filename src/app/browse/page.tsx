@@ -2,6 +2,7 @@ import { db } from '@/db'
 import { BrowseHeader } from '@/components/browse/BrowseHeader'
 import { BrowseFilters } from '@/components/browse/BrowseFilters'
 import { BrowseGrid } from '@/components/browse/BrowseGrid'
+import { BrowsePagination } from '@/components/browse/BrowsePagination'
 import { Navigation } from '@/components/site/Navigation'
 import { Footer } from '@/components/site/Footer'
 import { Metadata } from 'next'
@@ -10,6 +11,8 @@ export const metadata: Metadata = {
   title: 'Browse AI Tools - Lifetime Deals | AIsumo',
   description: 'Discover the best AI tools at unbeatable prices. Lifetime access to premium software with no monthly fees.'
 }
+
+export const dynamic = 'force-dynamic'
 
 interface SearchParams {
   category?: string

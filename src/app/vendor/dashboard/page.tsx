@@ -3,6 +3,11 @@ import { db } from '@/db'
 import { VendorNavigation } from '@/components/vendor/VendorNavigation'
 import { LicenseKeyManager } from '@/components/vendor/LicenseKeyManager'
 import Link from 'next/link'
+import { VendorStats } from '@/components/vendor/VendorStats'
+import { VendorTools } from '@/components/vendor/VendorTools'
+import { VendorRecentSales } from '@/components/vendor/VendorRecentSales'
+
+export const dynamic = 'force-dynamic'
 
 export default async function VendorDashboard() {
   const user = await requireVendor()

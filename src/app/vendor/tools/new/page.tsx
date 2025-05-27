@@ -3,6 +3,8 @@ import { db } from '@/db'
 import { VendorNavigation } from '@/components/vendor/VendorNavigation'
 import { ToolForm } from '@/components/vendor/ToolForm'
 
+export const dynamic = 'force-dynamic'
+
 export default async function NewToolPage() {
   const user = await requireVendor()
   

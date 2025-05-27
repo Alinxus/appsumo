@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import type React from "react"; // Import React
 import { cn } from "@/lib/utils";
+import { SessionProvider } from "@/components/providers/SessionProvider";
 
 export const metadata: Metadata = {
   title: "AIsumo - AI Tools Marketplace",
@@ -28,7 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn("font-sans", "antialiased")}>
-        {children}
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

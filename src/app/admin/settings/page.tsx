@@ -1,6 +1,8 @@
 import { db } from '@/db'
 import { AdminSettingsForm } from '@/components/admin/AdminSettingsForm'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminSettingsPage() {
   let settings = await db.adminSettings.findFirst()
   

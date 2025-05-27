@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
+import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
 interface VendorNavigationProps {
@@ -19,11 +19,9 @@ interface VendorNavigationProps {
 
 export function VendorNavigation({ user }: VendorNavigationProps) {
   const router = useRouter()
-  const supabase = createClient()
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push('/')
+    await signOut({ callbackUrl: '/' })
   }
 
   return (
