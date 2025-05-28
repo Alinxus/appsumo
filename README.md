@@ -11,6 +11,7 @@ ShipFree is a free alternative to ShipFast, designed to simplify and optimize yo
 - Stripe and LemonSqueezy integration
 - Email notifications via Mailgun
 - Modern UI built with Next.js and TailwindCSS
+- Role-based access control (User, Vendor, Admin)
 
 ## Docker Setup
 
@@ -122,6 +123,21 @@ Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
 ## Contributing
 
 For people who want to contribute, please refer to [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Admin Access
+
+ShipFree includes a secure admin access system. To set up admin access:
+
+1. Add the following to your `.env` file:
+   ```
+   ADMIN_SECRET_KEY=your-secure-secret-key
+   ```
+
+2. Navigate to `/auth/admin` in your browser or use the small "Admin" link in the navigation.
+
+3. Enter your credentials and the admin key to gain admin privileges.
+
+For more details, see the [Admin Setup Documentation](docs/ADMIN_SETUP.md).
 
 ---
 

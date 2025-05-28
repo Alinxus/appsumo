@@ -177,6 +177,15 @@ function UserMenu({ user }: { user: any }) {
         Dashboard
       </Link>
       
+      {user.role === 'ADMIN' && (
+        <Link
+          href="/admin"
+          className="text-sm text-gray-300 hover:text-white"
+        >
+          Admin Panel
+        </Link>
+      )}
+      
       <div className="flex items-center space-x-2">
         <div className="w-8 h-8 bg-[#00b289] rounded-full flex items-center justify-center">
           <span className="text-white text-sm font-medium">
