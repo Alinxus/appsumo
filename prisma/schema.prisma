@@ -17,6 +17,7 @@ enum UserRole {
   USER
   VENDOR
   ADMIN
+  AFFILIATE
 }
 
 enum PurchaseStatus {
@@ -39,6 +40,30 @@ enum FulfillmentMethod {
   COUPON_CODE
   API_PROVISION
   MANUAL_FULFILLMENT
+}
+
+enum ProductType {
+  TOOL
+  COURSE
+  BUNDLE
+}
+
+enum DealTier {
+  TIER_1 // 1 license
+  TIER_2 // 5 licenses  
+  TIER_3 // 10+ licenses
+}
+
+enum AffiliateStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum CommissionType {
+  PERCENTAGE
+  FIXED_AMOUNT
 }
 
 model Account {
@@ -94,19 +119,40 @@ model VerificationToken {
 }
 
 model Profile {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  fullName    String?
-  avatarUrl   String?
-  role        UserRole @default(USER)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  email     String   @unique
+  fullName  String?
+  avatarUrl String?
+  role      UserRole @default(USER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  aiTools     AiTool[]
-  reviews     Review[]
-  purchases   Purchase[]
-  wishlists   Wishlist[]
+  // Affiliate fields
+  affiliateCode       String?
+  affiliateStatus     AffiliateStatus?
+  affiliateCommission Decimal?         @default(10.00) @db.Decimal(5, 2) // Default 10%
+  totalEarnings       Decimal          @default(0) @db.Decimal(10, 2)
+  referralCount       Int              @default(0)
+
+  // Social fields
+  bio         String?
+  website     String?
+  socialLinks Json?
+
+  // Notification preferences
+  emailNotifications   Boolean @default(true)
+  dealAlerts           Boolean @default(true)
+  newsletterSubscribed Boolean @default(false)
+
+  aiTools           AiTool[]
+  courses           Course[]
+  reviews           Review[]
+  purchases         Purchase[]
+  wishlists         Wishlist[]
+  referrals         AffiliateReferral[] @relation("Referrer")
+  referredBy        AffiliateReferral[] @relation("Referred")
+  affiliateEarnings AffiliateEarning[]
 
   @@map("profiles")
 }
@@ -123,60 +169,98 @@ model Category {
   updatedAt   DateTime @updatedAt
 
   aiTools AiTool[]
+  Course  Course[]
 
   @@map("categories")
 }
 
 model AiTool {
-  id                  String     @id @default(cuid())
-  name                String
-  slug                String     @unique
-  description         String?
-  shortDescription    String?
-  categoryId          String
-  vendorId            String
-  regularPrice        Decimal    @db.Decimal(10, 2)
-  dealPrice           Decimal?   @db.Decimal(10, 2)
-  discountPercentage  Int?
-  dealStartsAt        DateTime?
-  dealEndsAt          DateTime?
-  status              ToolStatus @default(DRAFT)
-  isFeatured          Boolean    @default(false)
-  stockQuantity       Int?
-  images              String[]
-  features            String[]
-  specifications      Json?
-  requirements        String?
-  demoUrl             String?
-  websiteUrl          String?
-  accessInstructions  String?
-  licenseType         String?
-  refundPolicy        String?
-  
-  // AppSumo-style fulfillment
-  fulfillmentMethod   FulfillmentMethod @default(MANUAL_FULFILLMENT)
-  couponCode          String?
-  apiWebhookUrl       String?
-  redemptionUrl       String?
-  fulfillmentInstructions String?
-  
-  // Commission & Revenue
-  platformCommission Decimal    @db.Decimal(5, 2) @default(70.00) // AppSumo's cut (70%)
-  vendorRevenue      Decimal    @db.Decimal(5, 2) @default(30.00) // Vendor's cut (30%)
-  
-  // License Management
-  totalLicenses      Int?       // Total licenses available
-  usedLicenses       Int        @default(0)
-  
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
+  id               String      @id @default(cuid())
+  name             String
+  slug             String      @unique
+  description      String?
+  shortDescription String?
+  categoryId       String
+  vendorId         String
+  productType      ProductType @default(TOOL)
 
-  category  Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  vendor    Profile    @relation(fields: [vendorId], references: [id], onDelete: Cascade)
-  reviews   Review[]
-  purchases Purchase[]
-  wishlists Wishlist[]
-  licenseKeys LicenseKey[]
+  // Pricing
+  regularPrice       Decimal  @db.Decimal(10, 2)
+  dealPrice          Decimal? @db.Decimal(10, 2)
+  discountPercentage Int?
+
+  // Deal tiers (AppSumo-style)
+  dealTiers     DealTier[]
+  tier1Price    Decimal?   @db.Decimal(10, 2)
+  tier2Price    Decimal?   @db.Decimal(10, 2)
+  tier3Price    Decimal?   @db.Decimal(10, 2)
+  tier1Licenses Int?       @default(1)
+  tier2Licenses Int?       @default(5)
+  tier3Licenses Int?       @default(10)
+
+  // Deal timing
+  dealStartsAt      DateTime?
+  dealEndsAt        DateTime?
+  isFlashDeal       Boolean   @default(false)
+  flashDealDuration Int? // in hours
+
+  // Status and visibility
+  status       ToolStatus @default(DRAFT)
+  isFeatured   Boolean    @default(false)
+  isStaffPick  Boolean    @default(false)
+  isBestSeller Boolean    @default(false)
+  isNew        Boolean    @default(false)
+  isEndingSoon Boolean    @default(false)
+
+  // Inventory
+  stockQuantity Int?
+  soldCount     Int  @default(0)
+  viewCount     Int  @default(0)
+
+  // Media
+  images     String[]
+  videoUrl   String?
+  demoUrl    String?
+  websiteUrl String?
+
+  // Content
+  features           String[]
+  specifications     Json?
+  requirements       String?
+  accessInstructions String?
+  licenseType        String?
+  refundPolicy       String?
+
+  // AppSumo-style fulfillment
+  fulfillmentMethod       FulfillmentMethod @default(MANUAL_FULFILLMENT)
+  couponCode              String?
+  apiWebhookUrl           String?
+  redemptionUrl           String?
+  fulfillmentInstructions String?
+
+  // Commission & Revenue
+  platformCommission  Decimal @default(70.00) @db.Decimal(5, 2)
+  vendorRevenue       Decimal @default(30.00) @db.Decimal(5, 2)
+  affiliateCommission Decimal @default(10.00) @db.Decimal(5, 2)
+
+  // License Management
+  totalLicenses Int?
+  usedLicenses  Int  @default(0)
+
+  // Social proof
+  socialProof  Json? // "X people bought this in 24h"
+  testimonials Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category          Category           @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  vendor            Profile            @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  reviews           Review[]
+  purchases         Purchase[]
+  wishlists         Wishlist[]
+  licenseKeys       LicenseKey[]
+  affiliateEarnings AffiliateEarning[]
 
   @@map("ai_tools")
 }
@@ -193,7 +277,7 @@ model Review {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  tool AiTool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  tool AiTool  @relation(fields: [toolId], references: [id], onDelete: Cascade)
   user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([toolId, userId])
@@ -201,23 +285,34 @@ model Review {
 }
 
 model Purchase {
-  id                  String         @id @default(cuid())
-  userId              String
-  toolId              String
-  quantity            Int            @default(1)
-  pricePaid           Decimal        @db.Decimal(10, 2)
-  status              PurchaseStatus @default(PENDING)
-  licenseKey          String?
-  accessInstructions  String?
-  orderNumber         String         @unique
-  paymentMethod       String?
-  refundReason        String?
-  refundedAt          DateTime?
-  createdAt           DateTime       @default(now())
-  updatedAt           DateTime       @updatedAt
+  id                 String         @id @default(cuid())
+  userId             String
+  toolId             String?
+  courseId           String?
+  quantity           Int            @default(1)
+  pricePaid          Decimal        @db.Decimal(10, 2)
+  status             PurchaseStatus @default(PENDING)
+  licenseKey         String?
+  accessInstructions String?
+  orderNumber        String         @unique
+  paymentMethod      String?
+  refundReason       String?
+  refundedAt         DateTime?
 
-  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tool AiTool  @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  // Affiliate tracking
+  affiliateCode       String?
+  affiliateCommission Decimal? @db.Decimal(10, 2)
+
+  // Deal tier
+  dealTier          DealTier?
+  licensesPurchased Int?      @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool   AiTool? @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  course Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@map("purchases")
 }
@@ -228,8 +323,10 @@ model Wishlist {
   toolId    String
   createdAt DateTime @default(now())
 
-  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tool AiTool  @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  user     Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool     AiTool  @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  Course   Course? @relation(fields: [courseId], references: [id])
+  courseId String?
 
   @@unique([userId, toolId])
   @@map("wishlists")
@@ -247,58 +344,65 @@ model NewsletterSubscription {
 }
 
 model AdminSettings {
-  id                    String   @id @default(cuid())
-  siteName              String   @default("AIsumo")
-  siteDescription       String?
-  siteUrl               String?
-  logoUrl               String?
-  faviconUrl            String?
-  primaryColor          String   @default("#00bf63")
-  accentColor           String   @default("#ff6b35")
-  heroTitle             String?
-  heroSubtitle          String?
-  featuredDealId        String?
-  enableNewsletter      Boolean  @default(true)
+  id                     String   @id @default(cuid())
+  siteName               String   @default("AIsumo")
+  siteDescription        String?
+  siteUrl                String?
+  logoUrl                String?
+  faviconUrl             String?
+  primaryColor           String   @default("#00bf63")
+  accentColor            String   @default("#ff6b35")
+  heroTitle              String?
+  heroSubtitle           String?
+  featuredDealId         String?
+  enableNewsletter       Boolean  @default(true)
   enableUserRegistration Boolean  @default(true)
-  maintenanceMode       Boolean  @default(false)
-  maintenanceMessage    String?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  maintenanceMode        Boolean  @default(false)
+  maintenanceMessage     String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 
   @@map("admin_settings")
 }
 
 model VendorApplication {
-  id              String   @id @default(cuid())
-  email           String
-  companyName     String
-  contactName     String
-  website         String?
-  description     String
-  toolsToSubmit   String
-  status          String   @default("PENDING")
-  notes           String?
-  reviewedBy      String?
-  reviewedAt      DateTime?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id            String    @id @default(cuid())
+  email         String
+  companyName   String
+  contactName   String
+  website       String?
+  description   String
+  toolsToSubmit String
+  status        String    @default("PENDING")
+  notes         String?
+  reviewedBy    String?
+  reviewedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@map("vendor_applications")
 }
 
 model DealPromotion {
-  id          String    @id @default(cuid())
-  name        String
-  description String?
-  discountType String
-  discountValue Decimal @db.Decimal(10, 2)
-  startDate   DateTime
-  endDate     DateTime
-  isActive    Boolean   @default(true)
-  maxUses     Int?
-  currentUses Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id            String   @id @default(cuid())
+  name          String
+  description   String?
+  discountType  String // PERCENTAGE, FIXED_AMOUNT, BUY_ONE_GET_ONE
+  discountValue Decimal  @db.Decimal(10, 2)
+  startDate     DateTime
+  endDate       DateTime
+  isActive      Boolean  @default(true)
+  maxUses       Int?
+  currentUses   Int      @default(0)
+
+  // Enhanced promotion features
+  minimumSpend       Decimal? @db.Decimal(10, 2)
+  applicableProducts Json? // Array of product IDs
+  stackable          Boolean  @default(false)
+  firstTimeOnly      Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("deal_promotions")
 }
@@ -310,23 +414,120 @@ model Analytics {
   uniqueUsers Int      @default(0)
   newSignups  Int      @default(0)
   purchases   Int      @default(0)
-  revenue     Decimal  @db.Decimal(12, 2) @default(0)
-  createdAt   DateTime @default(now())
+  revenue     Decimal  @default(0) @db.Decimal(12, 2)
+
+  // Enhanced metrics
+  affiliateSignups  Int     @default(0)
+  affiliateRevenue  Decimal @default(0) @db.Decimal(12, 2)
+  conversionRate    Decimal @default(0) @db.Decimal(5, 4)
+  averageOrderValue Decimal @default(0) @db.Decimal(10, 2)
+  refunds           Int     @default(0)
+  refundAmount      Decimal @default(0) @db.Decimal(12, 2)
+
+  createdAt DateTime @default(now())
 
   @@unique([date])
   @@map("analytics")
 }
 
 model LicenseKey {
-  id          String   @id @default(cuid())
-  toolId      String
-  keyValue    String   @unique
-  isUsed      Boolean  @default(false)
-  usedBy      String?  // User ID who redeemed it
-  usedAt      DateTime?
-  createdAt   DateTime @default(now())
+  id        String    @id @default(cuid())
+  toolId    String
+  keyValue  String    @unique
+  isUsed    Boolean   @default(false)
+  usedBy    String? // User ID who redeemed it
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
 
-  tool        AiTool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  tool AiTool @relation(fields: [toolId], references: [id], onDelete: Cascade)
 
   @@map("license_keys")
+}
+
+model Course {
+  id               String      @id @default(cuid())
+  name             String
+  slug             String      @unique
+  description      String?
+  shortDescription String?
+  categoryId       String
+  vendorId         String
+  productType      ProductType @default(COURSE)
+
+  // Course specific fields
+  duration    String? // e.g., "10 hours", "6 weeks"
+  difficulty  String? // Beginner, Intermediate, Advanced
+  language    String? // English, Spanish, etc.
+  certificate Boolean @default(false)
+
+  // Pricing (similar to AiTool)
+  regularPrice       Decimal   @db.Decimal(10, 2)
+  dealPrice          Decimal?  @db.Decimal(10, 2)
+  discountPercentage Int?
+  dealStartsAt       DateTime?
+  dealEndsAt         DateTime?
+
+  // Course content
+  modules       Json? // Array of course modules
+  totalLessons  Int?
+  totalDuration Int? // in minutes
+  previewUrl    String?
+  accessUrl     String?
+
+  // Status
+  status     ToolStatus @default(DRAFT)
+  isFeatured Boolean    @default(false)
+
+  // Media
+  images   String[]
+  videoUrl String?
+
+  // Commission
+  platformCommission  Decimal @default(70.00) @db.Decimal(5, 2)
+  vendorRevenue       Decimal @default(30.00) @db.Decimal(5, 2)
+  affiliateCommission Decimal @default(10.00) @db.Decimal(5, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category  Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  vendor    Profile    @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  purchases Purchase[]
+  wishlists Wishlist[]
+
+  @@map("courses")
+}
+
+model AffiliateReferral {
+  id               String   @id @default(cuid())
+  referrerId       String
+  referredId       String
+  referralCode     String
+  commissionEarned Decimal  @default(0) @db.Decimal(10, 2)
+  status           String   @default("PENDING") // PENDING, COMPLETED, CANCELLED
+  createdAt        DateTime @default(now())
+
+  referrer Profile @relation("Referrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred Profile @relation("Referred", fields: [referredId], references: [id], onDelete: Cascade)
+
+  @@unique([referrerId, referredId])
+  @@map("affiliate_referrals")
+}
+
+model AffiliateEarning {
+  id             String         @id @default(cuid())
+  affiliateId    String
+  toolId         String?
+  purchaseId     String?
+  amount         Decimal        @db.Decimal(10, 2)
+  commissionType CommissionType @default(PERCENTAGE)
+  commissionRate Decimal        @db.Decimal(5, 2)
+  status         String         @default("PENDING") // PENDING, PAID, CANCELLED
+  paidAt         DateTime?
+  createdAt      DateTime       @default(now())
+
+  affiliate Profile @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  tool      AiTool? @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@map("affiliate_earnings")
 }
