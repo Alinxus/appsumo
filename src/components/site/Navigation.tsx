@@ -14,7 +14,7 @@ export function Navigation() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <span className="text-2xl font-bold text-white">at<span className="text-[#00b289]">met</span></span>
+              <img src='/logo1' alt='logo'/>
             </Link>
             
             <div className="hidden md:flex items-center ml-10 space-x-8">
