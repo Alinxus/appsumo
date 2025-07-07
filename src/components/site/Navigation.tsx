@@ -14,7 +14,7 @@ export function Navigation() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <img src='/logo1' alt='logo'/>
+              <img src='/logo1.jpeg' alt='logo' width={40} height={40} />
             </Link>
             
             <div className="hidden md:flex items-center ml-10 space-x-8">
@@ -224,4 +224,4 @@ function AuthButtons() {
       </Link>
     </div>
   )
-} 
+}
