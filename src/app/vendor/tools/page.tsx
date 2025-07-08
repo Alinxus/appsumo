@@ -21,13 +21,24 @@ export default async function VendorToolsPage() {
         </div>
         )
     }
+
+  // Fetch vendor's tools from the database
+  const tools = await db.aiTool.findMany({
+    where: { vendorId: vendor?.profile?.id },
+    include: {
+      category: true,
+      _count: { select: { reviews: true, purchases: true } }
+    },
+    orderBy: { createdAt: 'desc' }
+  })
+
   return (
     <div className="flex flex-col min-h-screen">
       <VendorNavigation user={vendor} />
       <main className="flex-1 p-4">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-2xl font-bold mb-6">Vendor Dashboard</h1>
-          <VendorToolsList tools={vendor.tools}/>
+          <VendorToolsList tools={tools}/>
         </div>
       </main>
     </div>
