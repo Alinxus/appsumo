@@ -63,10 +63,12 @@ export function Navigation() {
               {session ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="p-0 h-9 w-9 rounded-full">
-                      <Avatar>
+                    <Button variant="ghost" className="p-0 h-10 w-10 rounded-full border-2 border-blue-500 shadow-sm bg-white hover:ring-2 hover:ring-blue-400 transition-all flex items-center justify-center">
+                      <Avatar className="h-10 w-10 bg-blue-100 border-none">
                         <span className="sr-only">User avatar</span>
-                        <span className="text-base font-medium">{(session.user.name || session.user.email).charAt(0).toUpperCase()}</span>
+                        <span className="text-lg font-bold text-blue-700">
+                          {(session.user.name || session.user.email).charAt(0).toUpperCase()}
+                        </span>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
