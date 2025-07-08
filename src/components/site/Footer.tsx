@@ -39,7 +39,7 @@ export function Footer() {
           </div>
           
           <div>
-            <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">atmet</h3>
+            <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Atmet</h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link href="/about" className="text-sm text-gray-400 hover:text-white">
@@ -74,7 +74,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2">
               <li>
                 <Link href="/sell" className="text-sm text-gray-400 hover:text-white">
-                  Sell on atmet
+                  Sell on Atmet
                 </Link>
               </li>
               <li>
@@ -147,7 +147,7 @@ export function Footer() {
             <span className="text-xl font-bold text-white">at<span className="text-[#00b289]">met</span></span>
           </div>
           <p className="text-xs text-gray-400">
-            &copy; {currentYear} atmet. All rights reserved.
+            &copy; {currentYear} Atmet. All rights reserved.
           </p>
         </div>
       </div>

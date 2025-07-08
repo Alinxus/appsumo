@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 
 export const metadata: Metadata = {
-  title: "ATMET - AI Tools Marketplace",
+  title: "Atmet - AI Tools Marketplace",
   description:
     "Discover the best AI tools at unbeatable prices. Lifetime access to premium software with no monthly fees.",
   keywords: [

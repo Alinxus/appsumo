@@ -23,7 +23,7 @@ export function Navigation() {
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2">
               <img src="/logo1.jpeg" alt="logo" width={36} height={36} className="rounded" />
-              <span className="font-bold text-xl text-gray-900 tracking-tight">atmet</span>
+              <span className="font-bold text-xl text-gray-900 tracking-tight">Atmet</span>
             </Link>
             <div className="hidden md:flex items-center gap-6">
               <Link href="/browse" className="text-sm text-gray-700 hover:text-blue-600 transition-colors">Browse</Link>
