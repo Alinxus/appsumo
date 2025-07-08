@@ -7,13 +7,29 @@ import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { useRouter } from 'next/navigation'
-import { Bell } from 'lucide-react'
+import { Bell, Check } from 'lucide-react'
 
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { data: session } = useSession()
   const router = useRouter()
   const [search, setSearch] = useState('')
+  const [isSwitchingRole, setIsSwitchingRole] = useState(false)
+
+  async function handleRoleSwitch(newRole: 'USER' | 'VENDOR') {
+    if (!session?.user?.id || session.user.role === newRole) return
+    setIsSwitchingRole(true)
+    try {
+      await fetch('/api/user/switch-role', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: session.user.id, role: newRole })
+      })
+      window.location.reload()
+    } finally {
+      setIsSwitchingRole(false)
+    }
+  }
 
   return (
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-200 shadow-sm">
@@ -76,6 +92,26 @@ export function Navigation() {
                     <DropdownMenuItem asChild>
                       <Link href="/dashboard">Dashboard</Link>
                     </DropdownMenuItem>
+                    {/* Role Switcher */}
+                    {(session.user.role === 'USER' || session.user.role === 'VENDOR') && (
+                      <div className="px-2 py-1">
+                        <div className="text-xs text-gray-500 mb-1">Switch Role</div>
+                        <button
+                          className={`flex items-center w-full px-2 py-1 rounded hover:bg-blue-50 ${session.user.role === 'USER' ? 'font-semibold text-blue-700' : 'text-gray-700'}`}
+                          disabled={isSwitchingRole || session.user.role === 'USER'}
+                          onClick={() => handleRoleSwitch('USER')}
+                        >
+                          {session.user.role === 'USER' && <Check className="w-4 h-4 mr-2 text-blue-600" />} User
+                        </button>
+                        <button
+                          className={`flex items-center w-full px-2 py-1 rounded hover:bg-blue-50 ${session.user.role === 'VENDOR' ? 'font-semibold text-blue-700' : 'text-gray-700'}`}
+                          disabled={isSwitchingRole || session.user.role === 'VENDOR'}
+                          onClick={() => handleRoleSwitch('VENDOR')}
+                        >
+                          {session.user.role === 'VENDOR' && <Check className="w-4 h-4 mr-2 text-blue-600" />} Vendor
+                        </button>
+                      </div>
+                    )}
                     {session.user.role === 'ADMIN' && (
                       <DropdownMenuItem asChild>
                         <Link href="/admin">Admin Panel</Link>
