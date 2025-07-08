@@ -6,11 +6,36 @@ import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import { useRouter } from 'next/navigation'
 
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { data: session } = useSession()
-  
+  const { data: session, update } = useSession()
+  const router = useRouter()
+  const [isRoleSwitcherOpen, setIsRoleSwitcherOpen] = useState(false)
+  const [currentRole, setCurrentRole] = useState(session?.user?.role || 'USER')
+
+  const switchRole = async (newRole: 'VENDOR' | 'USER') => {
+    try {
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          role: newRole
+        }
+      })
+      setCurrentRole(newRole)
+      setIsRoleSwitcherOpen(false)
+      if (newRole === 'VENDOR') {
+        router.push('/vendor/dashboard')
+      } else {
+        router.push('/dashboard')
+      }
+    } catch (error) {
+      console.error('Failed to switch role:', error)
+    }
+  }
+
   return (
     <nav className="bg-white/80 backdrop-blur border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
@@ -50,6 +75,32 @@ export function Navigation() {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem asChild>
                       <Link href="/dashboard">Dashboard</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <div className="relative w-full">
+                        <button
+                          onClick={() => setIsRoleSwitcherOpen(!isRoleSwitcherOpen)}
+                          className="w-full text-left px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                        >
+                          Switch Role ({currentRole})
+                        </button>
+                        {isRoleSwitcherOpen && (
+                          <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-50 py-1 border border-gray-200">
+                            <button
+                              onClick={() => switchRole('USER')}
+                              className={`block w-full text-left px-4 py-2 text-sm ${currentRole === 'USER' ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-100'}`}
+                            >
+                              Consumer
+                            </button>
+                            <button
+                              onClick={() => switchRole('VENDOR')}
+                              className={`block w-full text-left px-4 py-2 text-sm ${currentRole === 'VENDOR' ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-100'}`}
+                            >
+                              Vendor
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </DropdownMenuItem>
                     {session.user.role === 'ADMIN' && (
                       <DropdownMenuItem asChild>
