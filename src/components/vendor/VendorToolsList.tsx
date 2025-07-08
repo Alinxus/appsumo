@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useState } from 'react'
 
 interface Tool {
   id: string
@@ -18,6 +19,56 @@ interface VendorToolsListProps {
 }
 
 export function VendorToolsList({ tools }: VendorToolsListProps) {
+  const [toolStates, setToolStates] = useState(() => tools.map(t => ({ id: t.id, status: t.status })))
+  const [error, setError] = useState<string | null>(null)
+
+  const handlePause = async (toolId: string) => {
+    setError(null)
+    setToolStates(prev => prev.map(t => t.id === toolId ? { ...t, status: 'INACTIVE' } : t))
+    try {
+      const res = await fetch(`/api/vendor/tools/${toolId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'INACTIVE' })
+      })
+      if (!res.ok) throw new Error('Failed to pause tool')
+    } catch (e: any) {
+      setError(e.message)
+      setToolStates(prev => prev.map(t => t.id === toolId ? { ...t, status: 'ACTIVE' } : t))
+    }
+  }
+
+  const handleReactivate = async (toolId: string) => {
+    setError(null)
+    setToolStates(prev => prev.map(t => t.id === toolId ? { ...t, status: 'ACTIVE' } : t))
+    try {
+      const res = await fetch(`/api/vendor/tools/${toolId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'ACTIVE' })
+      })
+      if (!res.ok) throw new Error('Failed to reactivate tool')
+    } catch (e: any) {
+      setError(e.message)
+      setToolStates(prev => prev.map(t => t.id === toolId ? { ...t, status: 'INACTIVE' } : t))
+    }
+  }
+
+  const handleDelete = async (toolId: string) => {
+    setError(null)
+    const prevTools = toolStates
+    setToolStates(prev => prev.filter(t => t.id !== toolId))
+    try {
+      const res = await fetch(`/api/vendor/tools/${toolId}`, {
+        method: 'DELETE'
+      })
+      if (!res.ok) throw new Error('Failed to delete tool')
+    } catch (e: any) {
+      setError(e.message)
+      setToolStates(prevTools)
+    }
+  }
+
   const getStatusBadge = (status: string) => {
     const badges = {
       DRAFT: 'bg-gray-100 text-gray-800',
@@ -74,6 +125,8 @@ export function VendorToolsList({ tools }: VendorToolsListProps) {
         </Link>
       </div>
 
+      {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
+
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -99,77 +152,90 @@ export function VendorToolsList({ tools }: VendorToolsListProps) {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {tools.map((tool) => (
-              <tr key={tool.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <div className="text-sm font-medium text-gray-900">
-                          {tool.name}
+            {tools.map((tool) => {
+              const state = toolStates.find(t => t.id === tool.id) || { status: tool.status }
+              return (
+                <tr key={tool.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <div className="text-sm font-medium text-gray-900">
+                            {tool.name}
+                          </div>
+                          {tool.isFeatured && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800">
+                              Featured
+                            </span>
+                          )}
                         </div>
-                        {tool.isFeatured && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800">
-                            Featured
-                          </span>
-                        )}
+                        <div className="text-sm text-gray-500">{tool.category.name}</div>
                       </div>
-                      <div className="text-sm text-gray-500">{tool.category.name}</div>
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(tool.status)}`}>
-                    {getStatusText(tool.status)}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <div className="flex items-center space-x-2">
-                    {tool.dealPrice && tool.dealPrice < tool.regularPrice ? (
-                      <>
-                        <span className="font-semibold text-green-600">
-                          ${Number(tool.dealPrice).toFixed(0)}
-                        </span>
-                        <span className="text-gray-400 line-through">
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(state.status)}`}>
+                      {getStatusText(state.status)}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <div className="flex items-center space-x-2">
+                      {tool.dealPrice && tool.dealPrice < tool.regularPrice ? (
+                        <>
+                          <span className="font-semibold text-green-600">
+                            ${Number(tool.dealPrice).toFixed(0)}
+                          </span>
+                          <span className="text-gray-400 line-through">
+                            ${Number(tool.regularPrice).toFixed(0)}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="font-semibold">
                           ${Number(tool.regularPrice).toFixed(0)}
                         </span>
-                      </>
-                    ) : (
-                      <span className="font-semibold">
-                        ${Number(tool.regularPrice).toFixed(0)}
-                      </span>
-                    )}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {tool._count.purchases}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {tool._count.reviews}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <div className="flex items-center space-x-2">
-                    <Link
-                      href={`/tools/${tool.slug}`}
-                      className="text-blue-600 hover:text-blue-900"
-                    >
-                      View
-                    </Link>
-                    <Link
-                      href={`/vendor/tools/${tool.id}/edit`}
-                      className="text-green-600 hover:text-green-900"
-                    >
-                      Edit
-                    </Link>
-                    {tool.status === 'ACTIVE' && (
-                      <button className="text-orange-600 hover:text-orange-900">
-                        Pause
-                      </button>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {tool._count.purchases}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {tool._count.reviews}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex items-center space-x-2">
+                      <Link
+                        href={`/tools/${tool.slug}`}
+                        className="text-blue-600 hover:text-blue-900"
+                      >
+                        View
+                      </Link>
+                      <Link
+                        href={`/vendor/tools/${tool.id}/edit`}
+                        className="text-green-600 hover:text-green-900"
+                      >
+                        Edit
+                      </Link>
+                      {state.status === 'ACTIVE' && (
+                        <button className="text-orange-600 hover:text-orange-900" onClick={() => handlePause(tool.id)}>
+                          Pause
+                        </button>
+                      )}
+                      {state.status === 'INACTIVE' && (
+                        <button className="text-green-600 hover:text-green-900" onClick={() => handleReactivate(tool.id)}>
+                          Reactivate
+                        </button>
+                      )}
+                      {state.status !== 'DELETED' && (
+                        <button className="text-red-600 hover:text-red-900" onClick={() => handleDelete(tool.id)}>
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

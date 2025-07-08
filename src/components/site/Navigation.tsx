@@ -43,6 +43,13 @@ export function Navigation() {
               <Link href="/browse" className="text-sm text-gray-300 hover:text-white">
                 Ending soon
               </Link>
+              
+              <Link href="/tools" className="text-sm text-gray-300 hover:text-white">
+                Tools
+              </Link>
+              <Link href="/analytics" className="text-sm text-gray-300 hover:text-white">
+                Analytics
+              </Link>
             </div>
           </div>
           
@@ -123,6 +130,19 @@ export function Navigation() {
               className="block py-2 text-base text-gray-300 hover:text-white"
             >
               Ending soon
+            </Link>
+            
+            <Link
+              href="/tools"
+              className="block py-2 text-base text-gray-300 hover:text-white"
+            >
+              Tools
+            </Link>
+            <Link
+              href="/analytics"
+              className="block py-2 text-base text-gray-300 hover:text-white"
+            >
+              Analytics
             </Link>
             
             {session ? (

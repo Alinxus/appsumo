@@ -7,10 +7,11 @@ import { AdminRecentActivity } from '@/components/admin/AdminRecentActivity'
 import { AdminStatsCards } from '@/components/admin/AdminStatsCards'
 import { RecentActivity } from '@/components/admin/RecentActivity'
 import { QuickActions } from '@/components/admin/QuickActions'
+import { useEffect, useState } from 'react'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminDashboard() {
+export default function AdminDashboard() {
   const [
     totalUsers,
     totalTools,
@@ -66,6 +67,36 @@ export default async function AdminDashboard() {
     ...(vendorApplications > 0 ? [`${vendorApplications} vendor applications waiting`] : []),
   ]
 
+  const [affiliates, setAffiliates] = useState([])
+  const [payouts, setPayouts] = useState([])
+  const [affMsg, setAffMsg] = useState('')
+
+  useEffect(() => {
+    fetch('/api/admin/affiliates').then(res => res.json()).then(setAffiliates)
+    fetch('/api/admin/affiliate-payouts').then(res => res.json()).then(setPayouts)
+  }, [])
+
+  const handleApprove = async (id: string) => {
+    setAffMsg('')
+    const res = await fetch(`/api/admin/affiliates/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'APPROVED' }) })
+    if (res.ok) setAffiliates(a => a.map((aff: any) => aff.id === id ? { ...aff, affiliateStatus: 'APPROVED' } : aff))
+    else setAffMsg('Failed to approve')
+  }
+
+  const handleReject = async (id: string) => {
+    setAffMsg('')
+    const res = await fetch(`/api/admin/affiliates/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'REJECTED' }) })
+    if (res.ok) setAffiliates(a => a.map((aff: any) => aff.id === id ? { ...aff, affiliateStatus: 'REJECTED' } : aff))
+    else setAffMsg('Failed to reject')
+  }
+
+  const handlePayoutMarkPaid = async (id: string) => {
+    setAffMsg('')
+    const res = await fetch(`/api/admin/affiliate-payouts/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'PAID' }) })
+    if (res.ok) setPayouts(p => p.map((pay: any) => pay.id === id ? { ...pay, status: 'PAID' } : pay))
+    else setAffMsg('Failed to mark as paid')
+  }
+
   return (
     <div className="space-y-8">
       <div>
@@ -100,6 +131,70 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <RecentActivity />
         <QuickActions />
+      </div>
+
+      {/* Affiliate Management */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Affiliate Applications</h3>
+        {affMsg && <div className="text-red-600 mb-2">{affMsg}</div>}
+        <div className="overflow-x-auto mb-6">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {affiliates.map((aff: any) => (
+                <tr key={aff.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{aff.fullName || aff.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{aff.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">{aff.affiliateStatus}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    {aff.affiliateStatus === 'PENDING' && (
+                      <>
+                        <button className="text-green-600 mr-2" onClick={() => handleApprove(aff.id)}>Approve</button>
+                        <button className="text-red-600" onClick={() => handleReject(aff.id)}>Reject</button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Affiliate Payout Requests</h3>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Affiliate</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {payouts.map((pay: any) => (
+                <tr key={pay.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{pay.affiliateName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{pay.payoutEmail}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">${pay.amount}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">{pay.status}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    {pay.status === 'PENDING' && (
+                      <button className="text-blue-600" onClick={() => handlePayoutMarkPaid(pay.id)}>Mark as Paid</button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )

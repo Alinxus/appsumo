@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 interface AffiliateDashboardProps {
@@ -10,8 +10,51 @@ interface AffiliateDashboardProps {
 
 export function AffiliateDashboard({ data, onRefresh }: AffiliateDashboardProps) {
   const [activeTab, setActiveTab] = useState('overview')
+  const [payoutEmail, setPayoutEmail] = useState(data.profile.payoutEmail || '')
+  const [payoutMessage, setPayoutMessage] = useState('')
+  const [isSavingPayout, setIsSavingPayout] = useState(false)
+  const [payouts, setPayouts] = useState<any[]>([])
+  const [isRequesting, setIsRequesting] = useState(false)
 
   const { profile, stats, recentReferrals, topProducts, recentEarnings } = data
+
+  useEffect(() => {
+    fetch('/api/affiliate/payouts').then(res => res.json()).then(setPayouts)
+  }, [])
+
+  const savePayoutInfo = async () => {
+    setIsSavingPayout(true)
+    setPayoutMessage('')
+    try {
+      const res = await fetch('/api/affiliate/payout-info', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ payoutEmail })
+      })
+      if (!res.ok) throw new Error('Failed to update payout info')
+      setPayoutMessage('Payout info updated!')
+      onRefresh()
+    } catch (e: any) {
+      setPayoutMessage(e.message)
+    } finally {
+      setIsSavingPayout(false)
+    }
+  }
+
+  const requestPayout = async () => {
+    setIsRequesting(true)
+    setPayoutMessage('')
+    try {
+      const res = await fetch('/api/affiliate/payouts', { method: 'POST' })
+      if (!res.ok) throw new Error('Failed to request payout')
+      setPayoutMessage('Payout requested!')
+      onRefresh()
+    } catch (e: any) {
+      setPayoutMessage(e.message)
+    } finally {
+      setIsRequesting(false)
+    }
+  }
 
   const getStatusBadge = (status: string) => {
     const badges = {
@@ -340,6 +383,65 @@ export function AffiliateDashboard({ data, onRefresh }: AffiliateDashboardProps)
           </div>
         </div>
       </div>
+
+      {/* Payout Info & Request */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Payout Info</h3>
+        <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-4">
+          <input
+            type="email"
+            className="border px-4 py-2 rounded-lg w-full md:w-80 mb-2 md:mb-0"
+            placeholder="PayPal Email"
+            value={payoutEmail}
+            onChange={e => setPayoutEmail(e.target.value)}
+          />
+          <button
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium"
+            onClick={savePayoutInfo}
+            disabled={isSavingPayout}
+          >
+            {isSavingPayout ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+        <div className="text-sm text-green-700 mb-2">{payoutMessage}</div>
+        <div className="flex items-center space-x-4">
+          <button
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium"
+            onClick={requestPayout}
+            disabled={isRequesting || stats.pendingEarnings < 10}
+          >
+            {isRequesting ? 'Requesting...' : 'Request Payout'}
+          </button>
+          <span className="text-sm text-gray-500">Minimum $10 to request payout</span>
+        </div>
+      </div>
+
+      {/* Payout History */}
+      {payouts.length > 0 && (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Payout History</h3>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {payouts.map(p => (
+                  <tr key={p.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{new Date(p.createdAt).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">${p.amount}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">{p.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   )
 } 
