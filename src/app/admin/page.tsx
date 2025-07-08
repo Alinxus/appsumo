@@ -1,9 +1,10 @@
+'use client'
 import { requireAdmin } from '@/lib/auth'
 import { db } from '@/db'
 import { AdminHeader } from '@/components/admin/AdminHeader'
-import { AdminStats } from '@/components/admin/AdminStats'
-import { AdminQuickActions } from '@/components/admin/AdminQuickActions'
-import { AdminRecentActivity } from '@/components/admin/AdminRecentActivity'
+// import { AdminStats } from '@/components/admin/AdminStats'
+// import { AdminQuickActions } from '@/components/admin/AdminQuickActions'
+// import { AdminRecentActivity } from '@/components/admin/AdminRecentActivity'
 import { AdminStatsCards } from '@/components/admin/AdminStatsCards'
 import { RecentActivity } from '@/components/admin/RecentActivity'
 import { QuickActions } from '@/components/admin/QuickActions'
@@ -67,8 +68,8 @@ export default async function AdminDashboard() {
     ...(vendorApplications > 0 ? [`${vendorApplications} vendor applications waiting`] : []),
   ]
 
-  const [affiliates, setAffiliates] = useState([])
-  const [payouts, setPayouts] = useState([])
+  const [affiliates, setAffiliates] = useState<any[]>([])
+  const [payouts, setPayouts] = useState<any[]>([])
   const [affMsg, setAffMsg] = useState('')
 
   useEffect(() => {
