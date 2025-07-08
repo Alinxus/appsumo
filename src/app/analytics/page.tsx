@@ -1,6 +1,7 @@
 import { db } from '@/db'
 import { Navigation } from '@/components/site/Navigation'
 import { Footer } from '@/components/site/Footer'
+import { Card, CardContent } from '@/components/ui/card'
 
 export const dynamic = 'force-dynamic'
 
@@ -28,22 +29,10 @@ export default async function AnalyticsPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Marketplace Analytics</h1>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-          <div>
-            <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalTools}+</div>
-            <div className="text-gray-600">AI Tools</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalUsers.toLocaleString()}+</div>
-            <div className="text-gray-600">Happy Customers</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalSales.toLocaleString()}+</div>
-            <div className="text-gray-600">Tools Sold</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold text-green-600">${marketplaceStats.totalSavings.toLocaleString()}+</div>
-            <div className="text-gray-600">Total Savings</div>
-          </div>
+          <Card><CardContent className="p-6 text-center"><div className="text-4xl font-bold text-neutral-900">{marketplaceStats.totalTools}+</div><div className="text-gray-600">AI Tools</div></CardContent></Card>
+          <Card><CardContent className="p-6 text-center"><div className="text-4xl font-bold text-neutral-900">{marketplaceStats.totalUsers.toLocaleString()}+</div><div className="text-gray-600">Happy Customers</div></CardContent></Card>
+          <Card><CardContent className="p-6 text-center"><div className="text-4xl font-bold text-neutral-900">{marketplaceStats.totalSales.toLocaleString()}+</div><div className="text-gray-600">Tools Sold</div></CardContent></Card>
+          <Card><CardContent className="p-6 text-center"><div className="text-4xl font-bold text-neutral-900">${marketplaceStats.totalSavings.toLocaleString()}+</div><div className="text-gray-600">Total Savings</div></CardContent></Card>
         </div>
       </div>
       <Footer />

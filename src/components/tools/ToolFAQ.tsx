@@ -1,6 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export function ToolFAQ() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(0)
@@ -41,7 +44,7 @@ export function ToolFAQ() {
   ]
 
   return (
-    <div className="bg-gray-50 py-16">
+    <section className="bg-gray-50 py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -52,77 +55,52 @@ export function ToolFAQ() {
           </p>
         </div>
 
-        <div className="space-y-4">
+        <Accordion type="single" collapsible value={openFAQ !== null ? String(openFAQ) : undefined} onValueChange={v => setOpenFAQ(v !== undefined ? Number(v) : null)} className="space-y-4">
           {faqs.map((faq, index) => (
-            <div key={index} className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <button
-                onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
-                className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
-              >
-                <h3 className="text-lg font-semibold text-gray-900 pr-4">
-                  {faq.question}
-                </h3>
-                <svg
-                  className={`w-6 h-6 text-gray-500 transform transition-transform ${
-                    openFAQ === index ? 'rotate-180' : ''
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              
-              {openFAQ === index && (
-                <div className="px-8 pb-6">
-                  <div className="border-t border-gray-100 pt-6">
-                    <p className="text-gray-700 leading-relaxed">
-                      {faq.answer}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
+            <AccordionItem key={index} value={String(index)} className="bg-white rounded-2xl border border-gray-200 shadow-sm">
+              <AccordionTrigger className="px-8 py-6 text-lg font-semibold text-gray-900 hover:bg-gray-50 transition-colors">{faq.question}</AccordionTrigger>
+              <AccordionContent className="px-8 pb-6 text-gray-700 leading-relaxed border-t border-gray-100">{faq.answer}</AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
 
         <div className="mt-12 text-center">
-          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-8">
-            <h3 className="text-xl font-bold text-blue-900 mb-4">
-              Still have questions?
-            </h3>
-            <p className="text-blue-800 mb-6">
-              Our support team is here to help you make the right decision.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="mailto:support@aisumo.com"
-                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Email Support
-              </a>
-              <a
-                href="/contact"
-                className="inline-flex items-center px-6 py-3 border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg transition-colors"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                Live Chat
-              </a>
-            </div>
-          </div>
+          <Card className="bg-gray-50 border border-gray-200 rounded-2xl shadow-sm">
+            <CardContent className="p-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Still have questions?
+              </h3>
+              <p className="text-gray-700 mb-6">
+                Our support team is here to help you make the right decision.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button asChild variant="default">
+                  <a
+                    href="mailto:support@aisumo.com"
+                    className="inline-flex items-center"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Email Support
+                  </a>
+                </Button>
+                <Button asChild variant="outline">
+                  <a
+                    href="/contact"
+                    className="inline-flex items-center"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    Live Chat
+                  </a>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </div>
+    </section>
   )
 } 

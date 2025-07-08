@@ -6,6 +6,8 @@ import { BrowsePagination } from '@/components/browse/BrowsePagination'
 import { Navigation } from '@/components/site/Navigation'
 import { Footer } from '@/components/site/Footer'
 import { Metadata } from 'next'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = {
   title: 'Browse AI Tools - Lifetime Deals | AIsumo',
@@ -108,36 +110,27 @@ export default async function BrowsePage({
       />
 
       {featuredTools.length > 0 && (
-        <section className="bg-gradient-to-r from-orange-50 to-red-50 border-y border-orange-200 py-12">
+        <section className="bg-gray-50 border-y border-gray-200 py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                🔥 Featured Deals - Don't Miss Out!
-              </h2>
-              <p className="text-xl text-gray-600">
-                Limited-time offers ending soon
-              </p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">🔥 Featured Deals - Don't Miss Out!</h2>
+              <p className="text-xl text-gray-600">Limited-time offers ending soon</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {featuredTools.map((tool) => (
-                <div key={tool.id} className="bg-white rounded-2xl shadow-lg p-6 border-2 border-orange-200">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full animate-pulse">
-                      FEATURED
-                    </span>
-                    <span className="text-2xl font-bold text-gray-900">
-                      ${Number(tool.dealPrice || tool.regularPrice).toFixed(0)}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{tool.name}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{tool.shortDescription}</p>
-                  <a 
-                    href={`/tools/${tool.slug}`}
-                    className="block w-full bg-green-600 hover:bg-green-700 text-white text-center font-bold py-3 rounded-lg transition-colors"
-                  >
-                    Get Deal Now
-                  </a>
-                </div>
+                <Card key={tool.id} className="border border-orange-200 bg-white rounded-2xl shadow-sm p-6">
+                  <CardContent className="p-0">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full">FEATURED</span>
+                      <span className="text-2xl font-bold text-gray-900">${Number(tool.dealPrice || tool.regularPrice).toFixed(0)}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{tool.name}</h3>
+                    <p className="text-gray-600 text-sm mb-4">{tool.shortDescription}</p>
+                    <Button asChild size="lg" className="w-full font-bold">
+                      <a href={`/tools/${tool.slug}`}>Get Deal Now</a>
+                    </Button>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>

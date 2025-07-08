@@ -82,9 +82,9 @@ export function DealCard({ tool, showCountdown = true }: DealCardProps) {
       Math.round(((Number(tool.regularPrice) - Number(tool.dealPrice)) / Number(tool.regularPrice)) * 100) : 0)
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-white">
+    <Card className="group hover:shadow-lg transition-all duration-300 border border-gray-200 shadow-sm bg-white rounded-xl">
       <CardHeader className="relative p-0">
-        <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg overflow-hidden">
+        <div className="aspect-video bg-gray-100 rounded-t-xl overflow-hidden flex items-center justify-center">
           {tool.images && tool.images.length > 0 ? (
             <img 
               src={tool.images[0]} 
@@ -100,121 +100,77 @@ export function DealCard({ tool, showCountdown = true }: DealCardProps) {
             </div>
           )}
         </div>
-
         <div className="absolute top-3 left-3 flex flex-wrap gap-1">
           {badges.map((badge, index) => {
             const Icon = badge.icon
             return (
-              <Badge key={index} className={`${badge.color} text-xs font-medium`}>
-                <Icon className="w-3 h-3 mr-1" />
-                {badge.label}
-              </Badge>
+              <Badge key={index} className={`bg-gray-200 text-gray-700 text-xs font-medium px-2 py-0.5 rounded`}>{Icon && <Icon className="w-3 h-3 mr-1" />}{badge.label}</Badge>
             )
           })}
         </div>
-
         {discountPercentage > 0 && (
           <div className="absolute top-3 right-3">
-            <Badge className="bg-red-500 text-white text-sm font-bold px-3 py-1">
-              -{discountPercentage}%
-            </Badge>
+            <Badge className="bg-neutral-900 text-white text-xs font-bold px-3 py-1 rounded">-{discountPercentage}%</Badge>
           </div>
         )}
-
         {showCountdown && tool.dealEndsAt && timeLeft.days >= 0 && (
           <div className="absolute bottom-3 left-3 right-3">
-            <div className="bg-black/80 backdrop-blur-sm rounded-lg p-2 text-white text-center">
+            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2 text-gray-900 text-center border border-gray-200">
               <div className="flex items-center justify-center gap-1 mb-1">
-                <Clock className="w-4 h-4" />
+                <Clock className="w-4 h-4 text-gray-500" />
                 <span className="text-xs font-medium">
                   {isEndingSoon ? 'Ending Soon!' : 'Deal Ends In'}
                 </span>
               </div>
               <div className="flex justify-center gap-1 text-xs">
                 {timeLeft.days > 0 && (
-                  <div className="bg-white/20 rounded px-1">
-                    {timeLeft.days}d
-                  </div>
+                  <div className="bg-gray-200 rounded px-1">{timeLeft.days}d</div>
                 )}
-                <div className="bg-white/20 rounded px-1">
-                  {timeLeft.hours.toString().padStart(2, '0')}h
-                </div>
-                <div className="bg-white/20 rounded px-1">
-                  {timeLeft.minutes.toString().padStart(2, '0')}m
-                </div>
-                <div className="bg-white/20 rounded px-1">
-                  {timeLeft.seconds.toString().padStart(2, '0')}s
-                </div>
+                <div className="bg-gray-200 rounded px-1">{timeLeft.hours.toString().padStart(2, '0')}h</div>
+                <div className="bg-gray-200 rounded px-1">{timeLeft.minutes.toString().padStart(2, '0')}m</div>
+                <div className="bg-gray-200 rounded px-1">{timeLeft.seconds.toString().padStart(2, '0')}s</div>
               </div>
             </div>
           </div>
         )}
       </CardHeader>
-
-      <CardContent className="p-4">
+      <CardContent className="p-5">
         <div className="mb-3">
-          <h3 className="font-semibold text-gray-900 text-lg mb-1 line-clamp-2">
-            {tool.name}
-          </h3>
-          <p className="text-gray-600 text-sm line-clamp-2">
-            {tool.shortDescription}
-          </p>
+          <h3 className="font-semibold text-gray-900 text-lg mb-1 line-clamp-2">{tool.name}</h3>
+          <p className="text-gray-600 text-sm line-clamp-2">{tool.shortDescription}</p>
         </div>
-
         <div className="flex items-center gap-2 mb-3">
           <div className="flex items-center">
             {[1, 2, 3, 4, 5].map((star) => (
-              <Star 
-                key={star} 
-                className={`w-4 h-4 ${star <= (tool._count?.reviews || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
-              />
+              <Star key={star} className={`w-4 h-4 ${star <= (tool._count?.reviews || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
             ))}
           </div>
-          <span className="text-sm text-gray-600">
-            ({tool._count?.reviews || 0} reviews)
-          </span>
+          <span className="text-sm text-gray-500">({tool._count?.reviews || 0} reviews)</span>
         </div>
-
         {socialProof && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-2 mb-3">
-            <div className="flex items-center gap-2 text-green-700 text-sm">
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-2 mb-3">
+            <div className="flex items-center gap-2 text-gray-700 text-sm">
               <Users className="w-4 h-4" />
-              <span className="font-medium">{socialProof.recentBuyers || 0} people bought this in 24h</span>
+              <span className="font-medium">{socialProof.recentBuyers || 0} bought in 24h</span>
             </div>
           </div>
         )}
-
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             {tool.dealPrice ? (
               <>
-                <span className="text-2xl font-bold text-gray-900">
-                  ${Number(tool.dealPrice).toFixed(2)}
-                </span>
-                <span className="text-lg text-gray-500 line-through">
-                  ${Number(tool.regularPrice).toFixed(2)}
-                </span>
+                <span className="text-2xl font-bold text-gray-900">${Number(tool.dealPrice).toFixed(2)}</span>
+                <span className="text-lg text-gray-400 line-through">${Number(tool.regularPrice).toFixed(2)}</span>
               </>
             ) : (
-              <span className="text-2xl font-bold text-gray-900">
-                ${Number(tool.regularPrice).toFixed(2)}
-              </span>
+              <span className="text-2xl font-bold text-gray-900">${Number(tool.regularPrice).toFixed(2)}</span>
             )}
           </div>
-          <div className="text-right">
-            <div className="text-sm text-gray-600">Lifetime Access</div>
-            <div className="text-xs text-gray-500">No monthly fees</div>
-          </div>
+          <Button asChild size="sm" className="rounded px-4 py-2">
+            <Link href={`/tools/${tool.slug}`}>View Deal</Link>
+          </Button>
         </div>
       </CardContent>
-
-      <CardFooter className="p-4 pt-0">
-        <Link href={`/tools/${tool.slug}`} className="w-full">
-          <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
-            View Deal
-          </Button>
-        </Link>
-      </CardFooter>
     </Card>
   )
 } 

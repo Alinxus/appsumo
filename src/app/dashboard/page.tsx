@@ -9,6 +9,8 @@ import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
 import { PurchaseHistory } from '@/components/dashboard/PurchaseHistory'
 import { WishlistSection } from '@/components/dashboard/WishlistSection'
 import { DashboardStats } from '@/components/dashboard/DashboardStats'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export const dynamic = 'force-dynamic'
 
@@ -80,22 +82,18 @@ export default async function UserDashboard() {
           <div>
             <UserWishlist wishlist={wishlist} />
             
-            <div className="mt-8 bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 border border-green-200">
-              <h3 className="text-lg font-bold text-green-900 mb-2">
-                🎯 Discover More Tools
-              </h3>
-              <p className="text-sm text-green-800 mb-4">
-                Explore our marketplace to find more AI tools that can boost your productivity.
-              </p>
-              <a
-                href="/browse"
-                className="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-              >
-                Browse Deals
-                <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
+            <div className="mt-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="border border-gray-200 bg-white rounded-2xl shadow-sm">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">Discover More Tools</h3>
+                    <p className="text-sm text-gray-600 mb-4">Explore our marketplace to find more AI tools that can boost your productivity.</p>
+                    <Button asChild size="sm" className="w-full font-medium">
+                      <a href="/browse">Browse Deals</a>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </div>

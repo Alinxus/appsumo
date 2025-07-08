@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { DealCard } from '@/components/site/DealCard'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 
 interface SimilarToolsProps {
   tools: Array<{
@@ -25,7 +27,7 @@ export function SimilarTools({ tools }: SimilarToolsProps) {
   }
 
   return (
-    <div className="bg-white py-16">
+    <section className="bg-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -43,17 +45,19 @@ export function SimilarTools({ tools }: SimilarToolsProps) {
         </div>
 
         <div className="text-center mt-12">
-          <Link
-            href="/browse"
-            className="inline-flex items-center px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
-          >
-            Browse All Deals
-            <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
+          <Button asChild size="lg" className="font-semibold">
+            <Link
+              href="/browse"
+              className="inline-flex items-center"
+            >
+              Browse All Deals
+              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </Button>
         </div>
       </div>
-    </div>
+    </section>
   )
 } 

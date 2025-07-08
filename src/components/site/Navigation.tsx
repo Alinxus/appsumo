@@ -14,6 +14,7 @@ export function Navigation() {
   const router = useRouter()
   const [isRoleSwitcherOpen, setIsRoleSwitcherOpen] = useState(false)
   const [currentRole, setCurrentRole] = useState(session?.user?.role || 'USER')
+  const [search, setSearch] = useState('')
 
   const switchRole = async (newRole: 'VENDOR' | 'USER') => {
     try {
@@ -55,10 +56,23 @@ export function Navigation() {
           
           <div className="flex items-center gap-2">
             <div className="relative mx-4 hidden md:block">
-              <input type="text" placeholder="Search..." className="bg-gray-100 text-sm text-gray-900 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:bg-white w-60 border border-gray-200" />
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-              </div>
+              <input
+                type="text"
+                placeholder="Search..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && search.trim()) router.push(`/tools?search=${encodeURIComponent(search.trim())}`) }}
+                className="bg-gray-100 text-sm text-gray-900 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:bg-white w-60 border border-gray-200"
+              />
+              <button
+                className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 hover:text-gray-700"
+                onClick={() => { if (search.trim()) router.push(`/tools?search=${encodeURIComponent(search.trim())}`) }}
+                tabIndex={-1}
+                aria-label="Search"
+                type="button"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              </button>
             </div>
             
             <div className="hidden md:flex items-center">
