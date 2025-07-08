@@ -25,7 +25,11 @@ export function Navigation() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: session.user.id, role: newRole })
       })
-      window.location.reload()
+      if (newRole === 'VENDOR') {
+        router.push('/vendor/dashboard')
+      } else {
+        router.push('/dashboard')
+      }
     } finally {
       setIsSwitchingRole(false)
     }
