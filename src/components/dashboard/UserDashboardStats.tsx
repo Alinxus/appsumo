@@ -37,7 +37,7 @@ export function UserDashboardStats({ stats }: UserDashboardStatsProps) {
       name: 'Wishlisted',
       value: stats.totalWishlisted,
       icon: '❤️',
-      color: 'bg-red-500',
+      color: 'bg-red-499',
       bgColor: 'bg-red-50',
       textColor: 'text-red-700'
     }
