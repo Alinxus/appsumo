@@ -30,8 +30,8 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-8">
             <Link href="/" className="flex items-center">
-              <span className="text-2xl font-bold text-gray-900">AI</span>
-              <span className="text-2xl font-bold text-green-600">sumo</span>
+              <span className="text-2xl font-bold text-gray-900">AT</span>
+              <span className="text-2xl font-bold text-green-600">MET</span>
             </Link>
             
             <div className="hidden md:flex items-center space-x-6">

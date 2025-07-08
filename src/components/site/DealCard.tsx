@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { Clock, Star, Users, TrendingUp, Fire, Crown, Sparkles } from 'lucide-react'
+import { Clock, Star, Users, TrendingUp,  Crown, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 interface DealCardProps {
@@ -57,8 +57,8 @@ export function DealCard({ tool, showCountdown = true }: DealCardProps) {
     if (tool.isStaffPick) badges.push({ label: 'Staff Pick', icon: Sparkles, color: 'bg-blue-100 text-blue-800' })
     if (tool.isBestSeller) badges.push({ label: 'Best Seller', icon: TrendingUp, color: 'bg-green-100 text-green-800' })
     if (tool.isNew) badges.push({ label: 'New', icon: Sparkles, color: 'bg-yellow-100 text-yellow-800' })
-    if (isEndingSoon) badges.push({ label: 'Ending Soon', icon: Fire, color: 'bg-red-100 text-red-800' })
-    if (tool.isFlashDeal) badges.push({ label: 'Flash Deal', icon: Fire, color: 'bg-orange-100 text-orange-800' })
+    if (isEndingSoon) badges.push({ label: 'Ending Soon', icon: '🔥 ', color: 'bg-red-100 text-red-800' })
+    if (tool.isFlashDeal) badges.push({ label: 'Flash Deal', icon: '🔥', color: 'bg-orange-100 text-orange-800' })
 
     return badges
   }
