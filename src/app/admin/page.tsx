@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 
 export const dynamic = 'force-dynamic'
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
   const [
     totalUsers,
     totalTools,
