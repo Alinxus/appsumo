@@ -1,7 +1,7 @@
 import { requireVendor } from '@/lib/auth'
 import { VendorNavigation } from '@/components/vendor/VendorNavigation'
 import { AdvancedAnalytics } from '@/components/vendor/AdvancedAnalytics'
-import { db } from '@/lib/db'
+import { db } from '@/db'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,12 +12,12 @@ export default async function VendorAnalyticsPage() {
   // Revenue, sales, views, conversion rate, top tools, revenue by month, sales by tool
   const [tools, purchases] = await Promise.all([
     db.aiTool.findMany({
-      where: { vendorId: user.profile.id },
+      where: { vendorId: user?.profile?.id },
       include: { _count: { select: { purchases: true, reviews: true } } },
       orderBy: { createdAt: 'desc' }
     }),
     db.purchase.findMany({
-      where: { tool: { vendorId: user.profile.id }, status: 'COMPLETED' },
+      where: { tool: { vendorId: user?.profile?.id }, status: 'COMPLETED' },
       include: { tool: true },
       orderBy: { createdAt: 'desc' }
     })
