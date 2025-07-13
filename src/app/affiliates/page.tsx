@@ -8,12 +8,10 @@ import { AffiliateLandingHero } from '@/components/affiliate/AffiliateLandingHer
 import { AffiliateStatsSection } from '@/components/affiliate/AffiliateStatsSection'
 import { AffiliateBenefitsSection } from '@/components/affiliate/AffiliateBenefitsSection'
 import { AffiliateTestimonials } from '@/components/affiliate/AffiliateTestimonials'
-import { AffiliateSignupModal } from '@/components/affiliate/AffiliateSignupModal'
 import { AffiliateDashboard } from '@/components/affiliate/AffiliateDashboard'
 
 export default function AffiliateLandingPage() {
   const { data: session, status } = useSession()
-  const [showSignupModal, setShowSignupModal] = useState(false)
   const [affiliateData, setAffiliateData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -41,9 +39,9 @@ export default function AffiliateLandingPage() {
 
   const handleSignupClick = () => {
     if (status === 'unauthenticated') {
-      window.location.href = '/auth/login?redirect=/affiliates'
+      window.location.href = '/auth/login?redirect=/affiliates/signup'
     } else {
-      setShowSignupModal(true)
+      window.location.href = '/affiliates/signup'
     }
   }
 
@@ -112,16 +110,6 @@ export default function AffiliateLandingPage() {
 
       <Footer />
 
-      {/* Signup Modal */}
-      {showSignupModal && (
-        <AffiliateSignupModal
-          onClose={() => setShowSignupModal(false)}
-          onSuccess={() => {
-            setShowSignupModal(false)
-            fetchAffiliateData()
-          }}
-        />
-      )}
     </div>
   )
 }

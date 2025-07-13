@@ -60,7 +60,7 @@ export function Navigation() {
                 Courses
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-200 group-hover:w-full"></span>
               </Link>
-              <Link href="/affiliate" className="text-sm font-medium text-gray-700 hover:text-black transition-colors relative group">
+              <Link href="/affiliates/signup" className="text-sm font-medium text-gray-700 hover:text-black transition-colors relative group">
                 Affiliate
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-200 group-hover:w-full"></span>
               </Link>
@@ -176,7 +176,7 @@ export function Navigation() {
             <Link href="/browse" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Browse</Link>
             <Link href="/tools" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Tools</Link>
             <Link href="/courses" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Courses</Link>
-            <Link href="/affiliate" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Affiliate</Link>
+            <Link href="/affiliates/signup" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Affiliate</Link>
             
             {session ? (
               <>

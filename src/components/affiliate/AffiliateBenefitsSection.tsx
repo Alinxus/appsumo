@@ -92,9 +92,9 @@ export function AffiliateBenefitsSection() {
             <p className="text-lg mb-6">
               Join our affiliate program and start earning commissions on every sale you generate.
             </p>
-            <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <a href="/affiliates/signup" className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
               Apply Now
-            </button>
+            </a>
           </div>
         </div>
       </div>

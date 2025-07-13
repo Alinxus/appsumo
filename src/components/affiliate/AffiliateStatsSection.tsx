@@ -3,7 +3,7 @@
 export function AffiliateStatsSection() {
   const stats = [
     {
-      value: '₹50,000+',
+      value: '50,000+',
       label: 'Average Monthly Earnings',
       description: 'Top affiliates earning consistently'
     },
