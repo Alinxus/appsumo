@@ -77,6 +77,13 @@ export default async function UserDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
           <div className="lg:col-span-2">
             <UserPurchases purchases={purchases} />
+            <div className="mt-8 bg-indigo-50 p-6 rounded-2xl border border-indigo-100 text-center">
+              <h3 className="text-xl font-bold text-indigo-900">Get the Best Deals on AI Tools!</h3>
+              <p className="text-sm text-indigo-700 mt-2">Don't miss out on exclusive offers. Discover tools to enhance your productivity.</p>
+              <Button asChild size="sm" className="mt-4 bg-indigo-800 text-white">
+                <a href="/offers">Explore Offers</a>
+              </Button>
+            </div>
           </div>
           
           <div>
