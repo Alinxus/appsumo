@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-
+import type { Tool } from '@/types/tool'
+import FileUpload from '@/components/ui/FileUpload'
+import MultiFileUpload from '@/components/ui/MultiFileUpload'
 interface Category {
   id: string
   name: string
@@ -53,8 +55,17 @@ export function ToolForm({ categories, tool }: ToolFormProps) {
     vendorRevenue: tool?.vendorRevenue || '30.00',
     
     accessInstructions: tool?.accessInstructions || '',
-    refundPolicy: tool?.refundPolicy || ''
+    refundPolicy: tool?.refundPolicy || '',
+    
+    // Promo code fields
+    promoCode: tool?.promoCode || '',
+    promoDiscount: tool?.promoDiscount || '',
+    promoValidUntil: tool?.promoValidUntil ? new Date(tool.promoValidUntil).toISOString().slice(0, 16) : ''
   })
+
+  // File upload state
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const [bannerImage, setBannerImage] = useState<File | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -268,7 +279,7 @@ export function ToolForm({ categories, tool }: ToolFormProps) {
 
         {/* Pricing & Deal Structure */}
         <div className="bg-white rounded-2xl p-6 border border-gray-200">
-          <h3 className="text-lg font-semibold mb-4">💰 Pricing & Deal Structure</h3>
+          <h3 className="text-lg font-semibold mb-4 text-black">💰 Pricing & Deal Structure</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
@@ -484,21 +495,44 @@ export function ToolForm({ categories, tool }: ToolFormProps) {
         </div>
 
         {/* Product Details */}
-        <div className="bg-white rounded-2xl p-6 border border-gray-200">
-          <h3 className="text-lg font-semibold mb-4">📋 Product Details</h3>
+        <div className="bg-white rounded-2xl p-6 border border-gray-200 text-black">
+          <h3 className="text-lg font-semibold mb-4 text-black">📋 Product Details</h3>
           
-          <div>
+          {/* Banner Image Upload */}
+          <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Screenshots/Images (one URL per line)
+              Banner Image (Hero Image)
             </label>
-            <textarea
-              name="images"
-              value={formData.images}
-              onChange={handleChange}
-              rows={4}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              placeholder="https://example.com/screenshot1.png&#10;https://example.com/screenshot2.png"
+            <FileUpload
+              onFileSelect={setBannerImage}
+              accept="image/*"
+              className="border-2 border-dashed border-gray-300 hover:border-gray-400 bg-white"
+              label="Upload a high-quality banner image for your tool"
             />
+            {bannerImage && (
+              <div className="mt-2 text-sm text-gray-600">
+                Selected: {bannerImage.name}
+              </div>
+            )}
+          </div>
+
+          {/* Product Screenshots */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Product Screenshots & Images
+            </label>
+            <MultiFileUpload
+              onFilesSelect={setUploadedFiles}
+              accept="image/*"
+              maxFiles={10}
+              className="border-2 border-dashed border-gray-300 hover:border-gray-400 bg-white"
+              label="Upload screenshots and product images (max 10 files)"
+            />
+            {uploadedFiles.length > 0 && (
+              <div className="mt-2 text-sm text-gray-600">
+                {uploadedFiles.length} file(s) selected
+              </div>
+            )}
           </div>
 
           <div className="mt-6">
@@ -558,6 +592,106 @@ export function ToolForm({ categories, tool }: ToolFormProps) {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
               placeholder="Web browser, Internet connection, etc."
             />
+          </div>
+        </div>
+
+        {/* Promo Codes & Marketing */}
+        <div className="bg-white rounded-2xl p-6 border border-gray-200">
+          <h3 className="text-lg font-semibold mb-4 text-black">🎯 Promo Codes & Marketing</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Promo Code
+                <span className="text-xs text-gray-500 block">Optional discount code</span>
+              </label>
+              <input
+                type="text"
+                name="promoCode"
+                value={formData.promoCode}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 font-mono"
+                placeholder="SAVE20"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Discount Amount ($)
+                <span className="text-xs text-gray-500 block">Fixed amount off</span>
+              </label>
+              <input
+                type="number"
+                name="promoDiscount"
+                value={formData.promoDiscount}
+                onChange={handleChange}
+                min="0"
+                step="0.01"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                placeholder="10.00"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Valid Until
+                <span className="text-xs text-gray-500 block">Expiration date</span>
+              </label>
+              <input
+                type="datetime-local"
+                name="promoValidUntil"
+                value={formData.promoValidUntil}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h4 className="font-medium text-gray-900 mb-2">Marketing Guidelines</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• Use high-quality screenshots showing your tool's interface</li>
+              <li>• Banner image should be 1200x630px for optimal display</li>
+              <li>• Highlight key features and benefits clearly</li>
+              <li>• Include social proof or testimonials if available</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Additional Fields */}
+        <div className="bg-white rounded-2xl p-6 border border-gray-200">
+          <h3 className="text-lg font-semibold mb-4 text-black">📋 Additional Information</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Access Instructions
+                <span className="text-xs text-gray-500 block">How customers access your tool</span>
+              </label>
+              <textarea
+                name="accessInstructions"
+                value={formData.accessInstructions}
+                onChange={handleChange}
+                rows={4}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                placeholder="1. Login to your account&#10;2. Go to dashboard&#10;3. Enter license key..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Refund Policy
+                <span className="text-xs text-gray-500 block">Your refund terms</span>
+              </label>
+              <textarea
+                name="refundPolicy"
+                value={formData.refundPolicy}
+                onChange={handleChange}
+                rows={4}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                placeholder="60-day money-back guarantee. No questions asked."
+              />
+            </div>
           </div>
         </div>
 
