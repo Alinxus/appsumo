@@ -59,15 +59,15 @@ export default async function UserDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <Navigation />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-black">
             Welcome back, {user.profile?.fullName || user.email}!
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-700 mt-2">
             Manage your AI tools and discover new deals
           </p>
         </div>
@@ -77,10 +77,10 @@ export default async function UserDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
           <div className="lg:col-span-2">
             <UserPurchases purchases={purchases} />
-            <div className="mt-8 bg-indigo-50 p-6 rounded-2xl border border-indigo-100 text-center">
-              <h3 className="text-xl font-bold text-indigo-900">Get the Best Deals on AI Tools!</h3>
-              <p className="text-sm text-indigo-700 mt-2">Don't miss out on exclusive offers. Discover tools to enhance your productivity.</p>
-              <Button asChild size="sm" className="mt-4 bg-indigo-800 text-white">
+            <div className="mt-8 bg-black p-6 rounded-2xl border border-gray-200 text-center">
+              <h3 className="text-xl font-bold text-white">Get the Best Deals on AI Tools!</h3>
+              <p className="text-sm text-gray-300 mt-2">Don't miss out on exclusive offers. Discover tools to enhance your productivity.</p>
+              <Button asChild size="sm" className="mt-4 bg-white text-black hover:bg-gray-100">
                 <a href="/offers">Explore Offers</a>
               </Button>
             </div>
@@ -91,11 +91,11 @@ export default async function UserDashboard() {
             
             <div className="mt-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="border border-gray-200 bg-white rounded-2xl shadow-sm">
+                <Card className="border border-gray-200 bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                   <CardContent className="p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2">Discover More Tools</h3>
+                    <h3 className="text-lg font-bold text-black mb-2">Discover More Tools</h3>
                     <p className="text-sm text-gray-600 mb-4">Explore our marketplace to find more AI tools that can boost your productivity.</p>
-                    <Button asChild size="sm" className="w-full font-medium">
+                    <Button asChild size="sm" className="w-full font-medium bg-black text-white hover:bg-gray-800">
                       <a href="/browse">Browse Deals</a>
                     </Button>
                   </CardContent>

@@ -57,42 +57,42 @@ export default async function VendorDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <VendorNavigation user={user} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-black">
               Welcome back, {user.profile?.fullName || user.email}!
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-700 mt-2">
               Manage your AI tools and track your marketplace performance
             </p>
           </div>
-          <Link href="/vendor/tools/new" className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium transition-colors">
+          <Link href="/vendor/tools/new" className="bg-black hover:bg-gray-800 text-white px-5 py-2 rounded-lg font-medium transition-colors">
             ➕ Submit New Tool
           </Link>
         </div>
 
-        {/* AppSumo-Style Business Overview */}
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 border border-green-200 mb-8">
-          <h2 className="text-xl font-bold text-green-900 mb-4">💰 Your AppSumo Business</h2>
+        {/* Vendor Business Overview */}
+        <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-8">
+          <h2 className="text-xl font-bold text-black mb-4">📊 Your Business Overview</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-green-600">${vendorRevenue.toLocaleString()}</div>
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="text-2xl font-bold text-black">${vendorRevenue.toLocaleString()}</div>
               <div className="text-sm text-gray-600">Your Revenue (30%)</div>
             </div>
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-blue-600">{dashboardStats.totalSales}</div>
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="text-2xl font-bold text-black">{dashboardStats.totalSales}</div>
               <div className="text-sm text-gray-600">Total Sales</div>
             </div>
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-orange-600">{dashboardStats.activeTools}</div>
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="text-2xl font-bold text-black">{dashboardStats.activeTools}</div>
               <div className="text-sm text-gray-600">Active Tools</div>
             </div>
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-purple-600">{dashboardStats.totalLicenseKeys}</div>
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="text-2xl font-bold text-black">{dashboardStats.totalLicenseKeys}</div>
               <div className="text-sm text-gray-600">License Keys</div>
             </div>
           </div>
@@ -139,12 +139,12 @@ export default async function VendorDashboard() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200">
               <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900">Your AI Tools</h3>
-                <Link
-                  href="/vendor/tools/new"
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                >
-                  Add New Tool
-                </Link>
+                  <Link
+                    href={`/vendor/tools/new`}
+                    className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    Add New Tool
+                  </Link>
               </div>
 
               <div className="divide-y divide-gray-200">
@@ -157,7 +157,7 @@ export default async function VendorDashboard() {
                     </p>
                     <Link
                       href="/vendor/tools/new"
-                      className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                      className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-medium transition-colors"
                     >
                       Submit Your First Tool
                     </Link>
@@ -290,30 +290,30 @@ export default async function VendorDashboard() {
               </div>
             </div>
 
-            {/* AppSumo Partnership Info */}
-            <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 border border-orange-200">
-              <h3 className="text-lg font-bold text-orange-900 mb-3">🤝 AppSumo Partnership</h3>
+            {/* Partnership Info */}
+            <div className="bg-black rounded-2xl p-6 border border-gray-200">
+              <h3 className="text-lg font-bold text-white mb-3">🤝 Partnership Details</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-orange-700">Commission Split:</span>
-                  <span className="font-medium text-orange-900">70% / 30%</span>
+                  <span className="text-gray-300">Commission Split:</span>
+                  <span className="font-medium text-white">70% / 30%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-orange-700">Payment Schedule:</span>
-                  <span className="font-medium text-orange-900">Monthly</span>
+                  <span className="text-gray-300">Payment Schedule:</span>
+                  <span className="font-medium text-white">Monthly</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-orange-700">Customer Support:</span>
-                  <span className="font-medium text-orange-900">Shared</span>
+                  <span className="text-gray-300">Customer Support:</span>
+                  <span className="font-medium text-white">Shared</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-orange-700">Refund Policy:</span>
-                  <span className="font-medium text-orange-900">60 days</span>
+                  <span className="text-gray-300">Refund Policy:</span>
+                  <span className="font-medium text-white">60 days</span>
                 </div>
               </div>
               
-              <div className="mt-4 pt-4 border-t border-orange-200">
-                <p className="text-xs text-orange-700">
+              <div className="mt-4 pt-4 border-t border-gray-700">
+                <p className="text-xs text-gray-400">
                   Questions about the partnership? Contact your account manager or visit our vendor support center.
                 </p>
               </div>

@@ -12,41 +12,29 @@ export function UserDashboardStats({ stats }: UserDashboardStatsProps) {
     {
       name: 'Tools Purchased',
       value: stats.totalPurchases,
-      icon: '🛠️',
-      color: 'bg-blue-500',
-      bgColor: 'bg-blue-50',
-      textColor: 'text-blue-700'
+      icon: '🛠️'
     },
     {
       name: 'Total Spent',
       value: `$${stats.totalSpent.toLocaleString()}`,
-      icon: '💰',
-      color: 'bg-green-500',
-      bgColor: 'bg-green-50',
-      textColor: 'text-green-700'
+      icon: '💰'
     },
     {
       name: 'Total Saved',
       value: `$${stats.totalSaved.toLocaleString()}`,
-      icon: '💵',
-      color: 'bg-yellow-500',
-      bgColor: 'bg-yellow-50',
-      textColor: 'text-yellow-700'
+      icon: '💵'
     },
     {
       name: 'Wishlisted',
       value: stats.totalWishlisted,
-      icon: '❤️',
-      color: 'bg-red-499',
-      bgColor: 'bg-red-50',
-      textColor: 'text-red-700'
+      icon: '❤️'
     }
   ]
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {statCards.map((stat) => (
-        <div key={stat.name} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+        <div key={stat.name} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">
@@ -56,8 +44,8 @@ export function UserDashboardStats({ stats }: UserDashboardStatsProps) {
                 {stat.value}
               </p>
             </div>
-            <div className="w-12 h-12 bg-black/10 rounded-xl flex items-center justify-center text-2xl">
-              {stat.icon}
+            <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center text-2xl">
+              <span className="filter grayscale">{stat.icon}</span>
             </div>
           </div>
         </div>
