@@ -7,7 +7,7 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <span className="text-xl font-semibold text-white">
-                ⚡ ShipFree
+                ⚡ Atmet
               </span>
             </div>
             <p className="text-sm text-zinc-400">Built for makers, by makers</p>

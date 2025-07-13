@@ -15,7 +15,7 @@ export default function TestimonialsPage() {
     {
       name: "Larry",
       rating: 5,
-      text: "No more overthinking or endless configurations <span class='font-bold text-green-400'>Just clone, tweak, and launch.</span> ShipFree made everything seamless and stress-free!t",
+      text: "No more overthinking or endless configurations <span class='font-bold text-green-400'>Just clone, tweak, and launch.</span> Atmet made everything seamless and stress-free!",
       role: "Founder",
       avatar:
         "https://pbs.twimg.com/profile_images/1804234365817212928/n077GepN_400x400.jpg",

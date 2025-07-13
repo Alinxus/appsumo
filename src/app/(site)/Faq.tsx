@@ -11,7 +11,7 @@ const faqs: FAQItem[] = [
   {
     question: "Is this really free?",
     answer:
-      "Yes! ShipFree is open-source and community-driven. Use it for unlimited projects, no strings attached.",
+      "Yes! Atmet is open-source and community-driven. Use it for unlimited projects, no strings attached.",
   },
   {
     question: "What do I need to use ShipFree?",

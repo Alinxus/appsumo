@@ -25,7 +25,7 @@ export default function MakerIntro() {
                 href="#"
                 className="text-white hover:text-gray-200 underline underline-offset-2"
               >
-                ShipFree
+                Atmet
               </a>{" "}
               at <strong>idee8</strong> to remove those roadblocks and help
               founders launch faster—**for free**.

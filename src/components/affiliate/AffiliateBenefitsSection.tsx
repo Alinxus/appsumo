@@ -9,7 +9,7 @@ import {
   HeartHandshake
 } from "lucide-react";
 
-export default function AffiliateBenefitsSection() {
+export function AffiliateBenefitsSection() {
   const benefits = [
     {
       icon: DollarSign,

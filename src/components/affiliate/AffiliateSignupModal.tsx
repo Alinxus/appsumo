@@ -30,22 +30,27 @@ const StepTwo: React.FC<StepProps> = ({ next, back }) => (
   </div>
 );
 
-const StepThree: React.FC<StepProps> = ({ back }) => (
+const StepThree: React.FC<StepProps & { onSuccess: () => void }> = ({ back, onSuccess }) => (
   <div>
     <h2>Finalize Registration</h2>
     <p>Please review your information and submit your application.</p>
     <button onClick={back}>Back</button>
-    <button>Submit</button>
+    <button onClick={onSuccess}>Submit</button>
   </div>
 );
 
-export default function AffiliateSignupModal() {
+interface AffiliateSignupModalProps {
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+export function AffiliateSignupModal({ onClose, onSuccess }: AffiliateSignupModalProps) {
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps: SignupStep[] = [
     { title: "Step 1", component: <StepOne next={() => goToNextStep()} back={() => goToPreviousStep()} stepIndex={0} totalSteps={3}/> },
     { title: "Step 2", component: <StepTwo next={() => goToNextStep()} back={() => goToPreviousStep()} stepIndex={1} totalSteps={3}/> },
-    { title: "Step 3", component: <StepThree next={() => goToNextStep()} back={() => goToPreviousStep()} stepIndex={2} totalSteps={3}/> },
+    { title: "Step 3", component: <StepThree back={() => goToPreviousStep()} stepIndex={2} totalSteps={3} onSuccess={onSuccess}/> },
   ];
 
   const goToNextStep = () => {
@@ -58,7 +63,12 @@ export default function AffiliateSignupModal() {
 
   return (
     <div className="modal bg-white p-8 rounded shadow-lg">
-      <h1 className="text-2xl font-bold mb-4">Affiliate Signup</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Affiliate Signup</h1>
+        <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          ✕
+        </button>
+      </div>
       <div>{steps[currentStep].component}</div>
       <div className="flex justify-between mt-4">
         <span>Step {currentStep + 1} of {steps.length}</span>

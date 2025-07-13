@@ -45,7 +45,7 @@ export function Navigation() {
               <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center group-hover:bg-gray-800 transition-colors">
                 <img src="/logo.jpeg" alt="ShipFree Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="font-black text-2xl text-black tracking-tight">ShipFree</span>
+              <span className="font-black text-2xl text-black tracking-tight">ATMET</span>
             </Link>
             <div className="hidden lg:flex items-center gap-8">
               <Link href="/browse" className="text-sm font-medium text-gray-700 hover:text-black transition-colors relative group">
@@ -105,7 +105,7 @@ export function Navigation() {
                       <Avatar className="h-12 w-12 bg-black border-none">
                         <span className="sr-only">User avatar</span>
                         <span className="text-lg font-bold text-white">
-                          {(session.user.name || session.user.email).charAt(0).toUpperCase()}
+                          {(session?.user?.name || session?.user?.email).charAt(0).toUpperCase()}
                         </span>
                       </Avatar>
                     </Button>
@@ -115,26 +115,26 @@ export function Navigation() {
                       <Link href="/dashboard">Dashboard</Link>
                     </DropdownMenuItem>
                     {/* Role Switcher */}
-                    {(session.user.role === 'USER' || session.user.role === 'VENDOR') && (
+                    {(session?.user?.role === 'USER' || session?.user?.role === 'VENDOR') && (
                       <div className="px-2 py-1">
                         <div className="text-xs text-gray-500 mb-1">Switch Role</div>
                         <button
                           className={`flex items-center w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors ${session.user.role === 'USER' ? 'font-semibold text-black bg-gray-50' : 'text-gray-700'}`}
-                          disabled={isSwitchingRole || session.user.role === 'USER'}
+                          disabled={isSwitchingRole || session?.user?.role === 'USER'}
                           onClick={() => handleRoleSwitch('USER')}
                         >
-                          {session.user.role === 'USER' && <Check className="w-4 h-4 mr-2 text-black" />} User
+                          {session?.user?.role === 'USER' && <Check className="w-4 h-4 mr-2 text-black" />} User
                         </button>
                         <button
                           className={`flex items-center w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors ${session.user.role === 'VENDOR' ? 'font-semibold text-black bg-gray-50' : 'text-gray-700'}`}
-                          disabled={isSwitchingRole || session.user.role === 'VENDOR'}
+                          disabled={isSwitchingRole || session?.user?.role === 'VENDOR'}
                           onClick={() => handleRoleSwitch('VENDOR')}
                         >
-                          {session.user.role === 'VENDOR' && <Check className="w-4 h-4 mr-2 text-black" />} Vendor
+                          {session?.user?.role === 'VENDOR' && <Check className="w-4 h-4 mr-2 text-black" />} Vendor
                         </button>
                       </div>
                     )}
-                    {session.user.role === 'ADMIN' && (
+                    {session?.user?.role === 'ADMIN' && (
                       <DropdownMenuItem asChild>
                         <Link href="/admin">Admin Panel</Link>
                       </DropdownMenuItem>
