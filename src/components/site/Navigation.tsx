@@ -66,6 +66,11 @@ export function Navigation() {
               </Link>
             </div>
           </div>
+          
+          {/* Search Bar */}
+          <div className="hidden md:block flex-1 max-w-md mx-8">
+            <div className="relative">
+              <input
                 type="text"
                 placeholder="Search for tools..."
                 value={search}
@@ -83,6 +88,10 @@ export function Navigation() {
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               </button>
             </div>
+          </div>
+          
+          {/* Right side - Notifications and User menu */}
+          <div className="flex items-center gap-3">
             {/* Notification bell placeholder */}
             <button className="hidden md:inline-flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-100 transition-colors group" aria-label="Notifications">
               <Bell className="w-5 h-5 text-gray-500 group-hover:text-black transition-colors" />
@@ -169,6 +178,7 @@ export function Navigation() {
             <Link href="/courses" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Courses</Link>
             <Link href="/affiliate" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Affiliate</Link>
             
+            {session ? (
               <>
                 <Link href="/dashboard" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Dashboard</Link>
                 <button onClick={() => signOut({ callbackUrl: '/' })} className="mt-3 block w-full text-left py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Sign out</button>
