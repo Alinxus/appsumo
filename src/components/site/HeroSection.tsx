@@ -1,119 +1,102 @@
 'use client'
 
-import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Star, Users, Zap, TrendingUp, ArrowRight, Play } from 'lucide-react'
 
 interface HeroSectionProps {
-  title: string;
-  subtitle: string;
-  stats?: {
-    totalTools: number;
-    totalUsers: number;
-    totalSales: number;
-    totalSavings: number;
-  };
+  title: string
+  subtitle: string
+  stats: {
+    totalTools: number
+    totalUsers: number
+    totalSales: number
+    totalSavings: number
+  }
 }
 
 export function HeroSection({ title, subtitle, stats }: HeroSectionProps) {
-  const [isVisible, setIsVisible] = useState(false)
-
+  const [currentStat, setCurrentStat] = useState(0)
+  
   useEffect(() => {
-    setIsVisible(true)
+    const interval = setInterval(() => {
+      setCurrentStat((prev) => (prev + 1) % 4)
+    }, 3000)
+    return () => clearInterval(interval)
   }, [])
 
-  return (
-    <div className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-0 right-0 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
-      </div>
+  const statItems = [
+    { icon: Zap, value: stats.totalTools, label: 'AI Tools' },
+    { icon: Users, value: stats.totalUsers, label: 'Happy Users' },
+    { icon: TrendingUp, value: stats.totalSales, label: 'Sales Made' },
+    { icon: Star, value: stats.totalSavings, label: 'Total Savings', prefix: '$' }
+  ]
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+  return (
+    <section className="relative bg-white section-padding overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,_rgba(0,0,0,0.1)_1px,_transparent_0)] bg-[size:40px_40px]" />
+      </div>
+      
+      <div className="relative max-w-7xl mx-auto container-padding">
         <div className="text-center">
           {/* Badge */}
-          <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800 mb-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-            🚀 Trusted by 50,000+ entrepreneurs worldwide
-          </div>
-
-          {/* Main heading */}
-          <h1 className={`text-5xl md:text-7xl font-bold text-white mb-6 leading-tight transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
-              {title}
-            </span>
+          <Badge className="mb-8 bg-black text-white border-black hover:bg-gray-800 px-6 py-2 text-sm font-medium">
+            <Star className="w-4 h-4 mr-2 fill-white" />
+            Trusted by 10,000+ entrepreneurs worldwide
+          </Badge>
+          
+          {/* Main Title */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-black mb-8 leading-tight text-balance animate-fade-in">
+            {title}
           </h1>
-
+          
           {/* Subtitle */}
-          <p className={`text-xl md:text-2xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <p className="text-xl md:text-2xl text-gray-600 mb-16 max-w-4xl mx-auto leading-relaxed animate-slide-up">
             {subtitle}
           </p>
-
+          
           {/* CTA Buttons */}
-          <div className={`flex flex-col sm:flex-row gap-4 justify-center mb-16 transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <Link
-              href="/browse"
-              className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-xl text-lg hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              🛍️ Browse Deals
-              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
-            
-            <Link
-              href="/affiliate"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl text-lg hover:bg-white/20 border border-white/20 transition-all duration-200"
-            >
-              💰 Become an Affiliate
-            </Link>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-20 animate-scale-in">
+            <Button asChild size="lg" className="btn-primary text-xl px-12 py-6 shadow-2xl hover:shadow-3xl group">
+              <Link href="/browse" className="flex items-center">
+                Browse All Deals
+                <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="btn-secondary text-xl px-12 py-6 group">
+              <Link href="/tools" className="flex items-center">
+                <Play className="mr-3 w-6 h-6 group-hover:scale-110 transition-transform" />
+                See How It Works
+              </Link>
+            </Button>
           </div>
-
+          
           {/* Stats */}
-          {stats && (
-            <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto transition-all duration-1000 delay-800 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-green-400 mb-2">{stats.totalTools}+</div>
-                <div className="text-gray-400 text-sm md:text-base">Premium Tools</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">{stats.totalUsers.toLocaleString()}+</div>
-                <div className="text-gray-400 text-sm md:text-base">Happy Customers</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-purple-400 mb-2">{stats.totalSales.toLocaleString()}+</div>
-                <div className="text-gray-400 text-sm md:text-base">Deals Sold</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">${stats.totalSavings.toLocaleString()}+</div>
-                <div className="text-gray-400 text-sm md:text-base">Total Savings</div>
-              </div>
-            </div>
-          )}
-
-          {/* Social proof */}
-          <div className={`mt-16 transition-all duration-1000 delay-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <p className="text-gray-400 text-sm mb-6">Trusted by founders from</p>
-            <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-              {['Stripe', 'Shopify', 'Notion', 'Figma', 'Linear', 'Vercel'].map((company) => (
-                <div key={company} className="text-white/60 font-medium text-lg">
-                  {company}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+            {statItems.map((stat, index) => {
+              const Icon = stat.icon
+              return (
+                <div 
+                  key={index}
+                  className={`text-center p-8 rounded-2xl bg-white border-2 border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 card-hover ${
+                    currentStat === index ? 'border-black scale-105' : ''
+                  }`}
+                >
+                  <Icon className="w-10 h-10 mx-auto mb-4 text-black" />
+                  <div className="text-3xl md:text-4xl font-black text-black mb-2">
+                    {stat.prefix && stat.prefix}{stat.value.toLocaleString()}+
+                  </div>
+                  <div className="text-sm text-gray-600 font-medium uppercase tracking-wide">{stat.label}</div>
                 </div>
-              ))}
-            </div>
+              )
+            })}
           </div>
         </div>
       </div>
-
-      {/* Scroll indicator */}
-      <div className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-all duration-1000 delay-1200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-        <div className="animate-bounce">
-          <svg className="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </div>
-      </div>
-    </div>
+    </section>
   )
-} 
+}

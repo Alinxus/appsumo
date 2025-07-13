@@ -67,7 +67,7 @@ export default async function HomePage() {
       <Navigation />
       
       <HeroSection 
-        title={settings?.heroTitle || 'Discover AI Tools. Stay Innovative.'}
+        title={settings?.heroTitle || 'Discover Premium AI Tools. Stay Innovative.'}
         subtitle={settings?.heroSubtitle || 'Top AI software deals for entrepreneurs at incredible prices. Lifetime access to premium tools with no monthly fees.'}
         stats={marketplaceStats}
       />
@@ -80,38 +80,39 @@ export default async function HomePage() {
       
       <DealsGrid tools={activeTools} />
       
-      <div className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+      {/* CTA Section */}
+      <div className="bg-black text-white section-padding">
+        <div className="max-w-7xl mx-auto container-padding text-center">
+          <h2 className="text-4xl md:text-5xl font-black mb-6 animate-fade-in">
             Join thousands of entrepreneurs
           </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto animate-slide-up">
             Don't miss out on exclusive AI tool deals. Get lifetime access to premium software at unbeatable prices.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            <div>
-              <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalTools}+</div>
-              <div className="text-gray-600">AI Tools</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+            <div className="animate-scale-in">
+              <div className="text-5xl font-black text-white mb-2">{marketplaceStats.totalTools}+</div>
+              <div className="text-gray-400 font-medium">AI Tools</div>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalUsers.toLocaleString()}+</div>
-              <div className="text-gray-600">Happy Customers</div>
+            <div className="animate-scale-in" style={{animationDelay: '0.1s'}}>
+              <div className="text-5xl font-black text-white mb-2">{marketplaceStats.totalUsers.toLocaleString()}+</div>
+              <div className="text-gray-400 font-medium">Happy Customers</div>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-green-600">{marketplaceStats.totalSales.toLocaleString()}+</div>
-              <div className="text-gray-600">Tools Sold</div>
+            <div className="animate-scale-in" style={{animationDelay: '0.2s'}}>
+              <div className="text-5xl font-black text-white mb-2">{marketplaceStats.totalSales.toLocaleString()}+</div>
+              <div className="text-gray-400 font-medium">Tools Sold</div>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-green-600">${marketplaceStats.totalSavings.toLocaleString()}+</div>
-              <div className="text-gray-600">Total Savings</div>
+            <div className="animate-scale-in" style={{animationDelay: '0.3s'}}>
+              <div className="text-5xl font-black text-white mb-2">${marketplaceStats.totalSavings.toLocaleString()}+</div>
+              <div className="text-gray-400 font-medium">Total Savings</div>
             </div>
           </div>
           <a
             href="/browse"
-            className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center"
+            className="bg-white text-black px-12 py-5 rounded-xl text-lg font-black transition-all duration-300 inline-flex items-center hover:bg-gray-200 hover:scale-105 shadow-2xl"
           >
             Browse All Deals
-            <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="ml-3 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </a>
