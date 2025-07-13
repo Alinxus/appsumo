@@ -64,6 +64,10 @@ export function Navigation() {
                 Affiliate
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-200 group-hover:w-full"></span>
               </Link>
+              <Link href="/vendor/dashboard" className="text-sm font-medium text-gray-700 hover:text-black transition-colors relative group">
+                Partner Portal
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-200 group-hover:w-full"></span>
+              </Link>
             </div>
           </div>
           
@@ -177,6 +181,7 @@ export function Navigation() {
             <Link href="/tools" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Tools</Link>
             <Link href="/courses" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Courses</Link>
             <Link href="/affiliates/signup" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Affiliate</Link>
+            <Link href="/vendor/dashboard" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Partner Portal</Link>
             
             {session ? (
               <>
