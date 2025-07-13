@@ -69,18 +69,18 @@ export function AffiliateDashboard({ data, onRefresh }: AffiliateDashboardProps)
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 border border-green-200">
+      <div className="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 border border-gray-200 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-green-900 mb-2">
+            <h2 className="text-3xl font-bold text-black mb-2">
               Welcome back, Affiliate!
             </h2>
-            <p className="text-green-700">
-              Your affiliate code: <span className="font-mono font-bold">{profile.affiliateCode}</span>
+            <p className="text-gray-600">
+              Your affiliate code: <span className="font-mono font-bold text-black bg-gray-100 px-2 py-1 rounded">{profile.affiliateCode}</span>
             </p>
           </div>
           <div className="mt-4 md:mt-0">
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusBadge(profile.affiliateStatus)}`}>
+            <span className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium border ${getStatusBadge(profile.affiliateStatus)}`}>
               {profile.affiliateStatus}
             </span>
           </div>
@@ -145,7 +145,7 @@ export function AffiliateDashboard({ data, onRefresh }: AffiliateDashboardProps)
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
                   activeTab === tab.id
-                    ? 'border-green-500 text-green-600'
+                    ? 'border-black text-black'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -174,7 +174,7 @@ export function AffiliateDashboard({ data, onRefresh }: AffiliateDashboardProps)
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-green-600">${earning.amount}</p>
+                          <p className="font-semibold text-black">${earning.amount}</p>
                           <p className="text-xs text-gray-500">{earning.status}</p>
                         </div>
                       </div>
@@ -196,7 +196,7 @@ export function AffiliateDashboard({ data, onRefresh }: AffiliateDashboardProps)
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-blue-600">${referral.commissionEarned}</p>
+                          <p className="font-semibold text-black">${referral.commissionEarned}</p>
                           <p className="text-xs text-gray-500">{referral.status}</p>
                         </div>
                       </div>

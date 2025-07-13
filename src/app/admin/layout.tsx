@@ -12,7 +12,7 @@ export default async function AdminLayout({
   await requireAdmin()
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <AdminHeader />
       <div className="flex">
         <AdminSidebar />

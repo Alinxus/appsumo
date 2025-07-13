@@ -25,21 +25,27 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
           </p>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {categories.map((category) => (
             <Link
               key={category.id}
               href={`/categories/${category.slug}`}
-              className="group p-6 bg-gray-50 rounded-lg text-center hover:bg-green-50 hover:shadow-md transition-all duration-200"
+              className="group p-6 bg-white border border-gray-200 rounded-2xl text-center hover:bg-black/5 hover:shadow-lg hover:border-black/20 transition-all duration-300"
             >
-              <div className="text-4xl mb-3">
-                {category.iconUrl || '📁'}
+              <div className="mb-4">
+                {category.iconUrl ? (
+                  <img src={category.iconUrl} alt={category.name} className="w-12 h-12 mx-auto" />
+                ) : (
+                  <div className="w-12 h-12 mx-auto bg-black/10 rounded-full flex items-center justify-center">
+                    <span className="text-2xl">🚀</span>
+                  </div>
+                )}
               </div>
-              <h3 className="font-medium text-gray-900 group-hover:text-green-600 transition-colors">
+              <h3 className="font-semibold text-gray-900 group-hover:text-black transition-colors mb-2">
                 {category.name}
               </h3>
               {category.description && (
-                <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                <p className="text-sm text-gray-500 line-clamp-2">
                   {category.description}
                 </p>
               )}

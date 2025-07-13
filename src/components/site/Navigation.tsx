@@ -39,13 +39,13 @@ export function Navigation() {
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto container-padding">
         <div className="flex h-20 items-center justify-between">
-          {/* Logo and nav links */}
+{/* Logo and nav links */}
           <div className="flex items-center gap-10">
             <Link href="/" className="flex items-center gap-3 group">
               <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center group-hover:bg-gray-800 transition-colors">
-                <span className="text-white font-black text-lg">A</span>
+                <img src="/logo.jpeg" alt="ShipFree Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="font-black text-2xl text-black tracking-tight">Atmet</span>
+              <span className="font-black text-2xl text-black tracking-tight">ShipFree</span>
             </Link>
             <div className="hidden lg:flex items-center gap-8">
               <Link href="/browse" className="text-sm font-medium text-gray-700 hover:text-black transition-colors relative group">
@@ -56,8 +56,8 @@ export function Navigation() {
                 Tools
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-200 group-hover:w-full"></span>
               </Link>
-              <Link href="/analytics" className="text-sm font-medium text-gray-700 hover:text-black transition-colors relative group">
-                Analytics
+              <Link href="/courses" className="text-sm font-medium text-gray-700 hover:text-black transition-colors relative group">
+                Courses
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-200 group-hover:w-full"></span>
               </Link>
               <Link href="/affiliate" className="text-sm font-medium text-gray-700 hover:text-black transition-colors relative group">
@@ -66,11 +66,6 @@ export function Navigation() {
               </Link>
             </div>
           </div>
-
-          {/* Search, notification, user */}
-          <div className="flex items-center gap-4">
-            <div className="relative hidden md:block">
-              <input
                 type="text"
                 placeholder="Search for tools..."
                 value={search}
@@ -171,9 +166,9 @@ export function Navigation() {
           <div className="px-4 space-y-3">
             <Link href="/browse" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Browse</Link>
             <Link href="/tools" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Tools</Link>
-            <Link href="/analytics" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Analytics</Link>
+            <Link href="/courses" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Courses</Link>
             <Link href="/affiliate" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Affiliate</Link>
-            {session ? (
+            
               <>
                 <Link href="/dashboard" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Dashboard</Link>
                 <button onClick={() => signOut({ callbackUrl: '/' })} className="mt-3 block w-full text-left py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Sign out</button>

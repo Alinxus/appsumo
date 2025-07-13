@@ -16,14 +16,14 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
       {stats.map((stat, index) => (
         <div
           key={index}
-          className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+          className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6"
         >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{stat.value}</p>
+              <p className="text-2xl font-bold text-black mt-2">{stat.value}</p>
             </div>
-            <div className="text-3xl">{stat.icon}</div>
+            <div className="w-12 h-12 bg-black/10 rounded-xl flex items-center justify-center text-2xl">{stat.icon}</div>
           </div>
           
           <div className="mt-4">
