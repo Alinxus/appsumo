@@ -39,19 +39,15 @@ export function Navigation() {
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto container-padding">
         <div className="flex h-20 items-center justify-between">
-{/* Logo and nav links */}
+          {/* Logo and nav links */}
           <div className="flex items-center gap-10">
             <Link href="/" className="flex items-center gap-3 group">
               <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center group-hover:bg-gray-800 transition-colors">
-                <img src="/logo.jpeg" alt="ShipFree Logo" className="w-full h-full object-contain" />
+                <img src="/logo.jpeg" alt="Atmet Logo" />
               </div>
               <span className="font-black text-2xl text-black tracking-tight">ATMET</span>
             </Link>
             <div className="hidden lg:flex items-center gap-8">
-              <Link href="/browse" className="text-sm font-medium text-gray-700 hover:text-black transition-colors relative group">
-                Browse
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-200 group-hover:w-full"></span>
-              </Link>
               <Link href="/tools" className="text-sm font-medium text-gray-700 hover:text-black transition-colors relative group">
                 Tools
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-200 group-hover:w-full"></span>
@@ -70,21 +66,29 @@ export function Navigation() {
               </Link>
             </div>
           </div>
-          
-          {/* Search Bar */}
-          <div className="hidden md:block flex-1 max-w-md mx-8">
+
+          {/* Search Bar – now visible on mobile & responsive */}
+          <div className="flex-1 mx-4 md:mx-8 max-w-xs md:max-w-md">
             <div className="relative">
               <input
                 type="text"
                 placeholder="Search for tools..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && search.trim()) router.push(`/tools?search=${encodeURIComponent(search.trim())}`) }}
-                className="bg-gray-50 text-sm text-gray-900 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black w-80 border border-gray-200 transition-all duration-200"
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && search.trim()) {
+                    router.push(`/tools?search=${encodeURIComponent(search.trim())}`)
+                  }
+                }}
+                className="bg-gray-50 text-sm text-gray-900 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black w-full md:w-80 border border-gray-200 transition-all duration-200"
               />
               <button
                 className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 hover:text-black transition-colors"
-                onClick={() => { if (search.trim()) router.push(`/tools?search=${encodeURIComponent(search.trim())}`) }}
+                onClick={() => {
+                  if (search.trim()) {
+                    router.push(`/tools?search=${encodeURIComponent(search.trim())}`)
+                  }
+                }}
                 tabIndex={-1}
                 aria-label="Search"
                 type="button"
@@ -93,13 +97,14 @@ export function Navigation() {
               </button>
             </div>
           </div>
-          
+
           {/* Right side - Notifications and User menu */}
           <div className="flex items-center gap-3">
             {/* Notification bell placeholder */}
             <button className="hidden md:inline-flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-100 transition-colors group" aria-label="Notifications">
               <Bell className="w-5 h-5 text-gray-500 group-hover:text-black transition-colors" />
             </button>
+
             {/* User menu */}
             <div className="hidden md:flex items-center">
               {session ? (
@@ -157,6 +162,7 @@ export function Navigation() {
                 </>
               )}
             </div>
+
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -173,6 +179,7 @@ export function Navigation() {
           </div>
         </div>
       </div>
+
       {/* Mobile menu */}
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-200 pb-6 pt-4 shadow-lg">
@@ -182,7 +189,7 @@ export function Navigation() {
             <Link href="/courses" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Courses</Link>
             <Link href="/affiliates/signup" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Affiliate</Link>
             <Link href="/vendor/dashboard" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Partner Portal</Link>
-            
+
             {session ? (
               <>
                 <Link href="/dashboard" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Dashboard</Link>
@@ -190,8 +197,8 @@ export function Navigation() {
               </>
             ) : (
               <>
-                <Link href="/auth/login" className="block py-3 text-base font-medium text-gray-700 hover:text-black rounded-lg hover:bg-gray-50 px-3 transition-colors">Log in</Link>
-                <Link href="/auth/register" className="mt-3 block bg-black text-white text-center py-3 px-4 rounded-lg font-semibold hover:bg-gray-800 transition-colors">Sign up</Link>
+                {/* Big primary button now acts as Login */}
+                <Link href="/auth/login" className="mt-3 block bg-black text-white text-center py-3 px-4 rounded-lg font-semibold hover:bg-gray-800 transition-colors">Log in</Link>
               </>
             )}
           </div>
