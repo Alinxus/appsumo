@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Tool } from '@/types/tool'
-import FileUpload from '@/components/ui/FileUpload'
-import MultiFileUpload from '@/components/ui/MultiFileUpload'
+import {FileUpload} from '@/components/ui/FileUpload'
+import {MultiFileUpload} from '@/components/ui/MultiFileUpload'
 interface Category {
   id: string
   name: string

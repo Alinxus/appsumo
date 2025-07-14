@@ -57,13 +57,13 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-sm text-gray-400 hover:text-white">
-                  Privacy
+                <Link href="/privacy-policy" className="text-sm text-gray-400 hover:text-white">
+                  Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-sm text-gray-400 hover:text-white">
-                  Terms
+                <Link href="/tos" className="text-sm text-gray-400 hover:text-white">
+                  Terms & Conditions
                 </Link>
               </li>
             </ul>
@@ -144,6 +144,7 @@ export function Footer() {
         
         <div className="mt-12 border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
           <div className="flex-shrink-0 flex items-center mb-4 md:mb-0">
+            <img src="/logo.jpeg" alt="Atmet Logo" className="h-8 w-auto mr-2" />
             <span className="text-xl font-bold text-white">at<span className="text-[#00b289]">met</span></span>
           </div>
           <p className="text-xs text-gray-400">
