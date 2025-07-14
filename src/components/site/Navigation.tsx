@@ -42,9 +42,7 @@ export function Navigation() {
           {/* Logo and nav links */}
           <div className="flex items-center gap-10">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center group-hover:bg-gray-800 transition-colors">
                 <img src="/logo.jpeg" alt="Atmet Logo" />
-              </div>
               <span className="font-black text-2xl text-black tracking-tight">ATMET</span>
             </Link>
             <div className="hidden lg:flex items-center gap-8">
